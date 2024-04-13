@@ -1,5 +1,8 @@
 ---
+import { db } from '@/db'
+import { type Project, projects } from '@/db/schema'
 
+const result: Project[] = await db.select().from(projects)
 ---
 
 <html lang="en">
@@ -8,9 +11,22 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Quadranto</title>
+    <title>quadranto.cloud</title>
   </head>
   <body>
-    <h1 class="font-black text-6xl">Quadranto App</h1>
+    <main class="container py-4">
+      <h1 class="mb-4 text-6xl font-black">quadranto.cloud</h1>
+      <h2 class="text-2xl font-semibold">Projects</h2>
+
+      <ul>
+        {
+          result.map((project) => (
+            <li class="py-2 font-medium">
+              {project.title} (#{project.id})
+            </li>
+          ))
+        }
+      </ul>
+    </main>
   </body>
 </html>

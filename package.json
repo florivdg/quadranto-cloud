@@ -7,10 +7,14 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "db:generate": "drizzle-kit generate:mysql",
+    "db:push": "drizzle-kit push:mysql",
+    "db:migrate": "bun run ./src/db/migrate.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
+    "@astrojs/node": "^8.2.5",
     "@astrojs/tailwind": "^5.1.0",
     "astro": "^4.6.0",
     "drizzle-orm": "^0.30.8",
@@ -20,6 +24,7 @@
   },
   "devDependencies": {
     "@types/bun": "^1.0.12",
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.20.14",
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0",
