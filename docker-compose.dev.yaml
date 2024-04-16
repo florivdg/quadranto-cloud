@@ -1,14 +1,18 @@
 services:
   db:
-    image: mariadb:11.3
+    image: postgres:16
     restart: unless-stopped
     networks:
       - default
     ports:
-      - "3312:3306"
+      - "5438:5432"
     environment:
-      TZ: "Europe/Berlin"
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-      MYSQL_DATABASE: quadranto
-      MYSQL_USER: quadranto
-      MYSQL_PASSWORD: quadranto
+      POSTGRES_USER: quadranto
+      POSTGRES_PASSWORD: quadranto
+      POSTGRES_DB: quadranto
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - 8080:8080

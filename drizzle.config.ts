@@ -7,8 +7,10 @@ config({ path: './.env.local' })
 export default {
   schema: './src/db/schema.ts',
   out: './src/db/migrations',
-  driver: 'mysql2',
+  driver: 'pg',
   dbCredentials: {
-    uri: process.env.DB_URL!,
+    connectionString: process.env.DB_URL!,
   },
+  verbose: true,
+  strict: true,
 } satisfies Config
