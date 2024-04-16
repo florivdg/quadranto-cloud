@@ -1,0 +1,13 @@
+---
+import { eq } from 'drizzle-orm'
+import { db } from '@/db'
+import { projects } from '@/db/schema'
+
+const { id } = Astro.params
+
+if (!id) return Astro.redirect('/404')
+
+const result = await db.select().from(projects).where(eq(projects.id, id))
+---
+
+<pre class="whitespace-pre-wrap">{JSON.stringify(result, null, 2)}</pre>

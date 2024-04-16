@@ -1,16 +1,14 @@
-import { sql } from 'drizzle-orm'
 import {
+  pgTable,
+  uuid,
   text,
-  mysqlTable,
   varchar,
   date,
   timestamp,
-} from 'drizzle-orm/mysql-core'
+} from 'drizzle-orm/pg-core'
 
-export const projects = mysqlTable('projects', {
-  id: varchar('id', { length: 48 })
-    .default(sql`UUID()`)
-    .primaryKey(),
+export const projects = pgTable('projects', {
+  id: uuid('id').defaultRandom().primaryKey(),
   title: varchar('title', { length: 1024 }).notNull(),
   description: text('description'),
   dueDate: date('due_date'),
