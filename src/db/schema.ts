@@ -71,7 +71,7 @@ export const profilesToProjects = pgTable(
       .references(() => projects.id),
   },
   (t) => ({
-    pk: primaryKey({ columns: [t.profileId, t.profileId] }),
+    pk: primaryKey({ columns: [t.profileId, t.projectId] }),
   }),
 )
 
