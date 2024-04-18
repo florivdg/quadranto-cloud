@@ -65,6 +65,14 @@ export const PUT: APIRoute = async ({ params, request }) => {
   /// Run the actual update operation.
   const project = await updateProject(id, data)
 
+  if (!project) {
+    const status = 404
+    return new Response(
+      JSON.stringify({ message: 'Project not found', code: status }),
+      { status, headers: { 'Content-Type': 'application/json' } },
+    )
+  }
+
   return new Response(JSON.stringify(project), {
     headers: { 'Content-Type': 'application/json' },
   })
