@@ -1,6 +1,7 @@
 ---
 import { db } from '@/db'
 import { type Project, projects } from '@/db/schema'
+import App from '@/layouts/App.astro'
 
 const result: Project[] = await db.select().from(projects)
 
@@ -16,50 +17,41 @@ function formatDateTime(date: Date): string {
 }
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>quadranto.cloud</title>
-  </head>
-  <body>
-    <main class="container py-4">
-      <h1 class="mb-4 text-6xl font-black">quadranto.cloud</h1>
-      <h2 class="text-2xl font-semibold">Projects</h2>
+<App title="Projects">
+  <main class="container py-4">
+    <h1 class="mb-4 text-6xl font-black">quadranto.cloud</h1>
+    <h2 class="text-2xl font-semibold">Projects</h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th class="py-2 pr-2 text-left">ID</th>
-            <th class="p-2 text-left">Title</th>
-            <th class="p-2 text-left">Description</th>
-            <th class="p-2 text-left">Due At</th>
-            <th class="py-2 pl-2 text-left">Created At</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            result.map((project) => (
-              <tr>
-                <td class="py-2 pr-2">{project.id}</td>
-                <td class="p-2">
-                  <a
-                    href={`/projects/${project.id}`}
-                    class=" underline hover:no-underline"
-                  >
-                    {project.title}
-                  </a>
-                </td>
-                <td class="p-2">{project.description}</td>
-                <td class="p-2">{project.dueDate}</td>
-                <td class="py-2 pl-2">{formatDateTime(project.createdAt)}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </main>
-  </body>
-</html>
+    <table>
+      <thead>
+        <tr>
+          <th class="py-2 pr-2 text-left">ID</th>
+          <th class="p-2 text-left">Title</th>
+          <th class="p-2 text-left">Description</th>
+          <th class="p-2 text-left">Due At</th>
+          <th class="py-2 pl-2 text-left">Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          result.map((project) => (
+            <tr>
+              <td class="py-2 pr-2">{project.id}</td>
+              <td class="p-2">
+                <a
+                  href={`/projects/${project.id}`}
+                  class=" underline hover:no-underline"
+                >
+                  {project.title}
+                </a>
+              </td>
+              <td class="p-2">{project.description}</td>
+              <td class="p-2">{project.dueDate}</td>
+              <td class="py-2 pl-2">{formatDateTime(project.createdAt)}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </main>
+</App>
