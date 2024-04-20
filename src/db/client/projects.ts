@@ -1,6 +1,13 @@
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
+import { type PostgresError } from 'postgres'
 import { db } from '@/db'
-import { type Project, type NewProject, projects } from '@/db/schema'
+import {
+  type Project,
+  type NewProject,
+  projects,
+  profilesToProjects,
+  type Profile,
+} from '@/db/schema'
 
 /**
  * Retrieves a list of projects from the database.
@@ -55,4 +62,86 @@ export async function updateProject(
  */
 export async function deleteProject(id: string): Promise<void> {
   await db.delete(projects).where(eq(projects.id, id))
+}
+
+/**
+ * Adds an owner to a project.
+ * @param projectId - The ID of the project.
+ * @param profileId - The ID of the profile to add as an owner.
+ * @returns A Promise that resolves to an object indicating the success of the operation.
+ */
+export async function addOwner(
+  projectId: string,
+  profileId: string,
+): Promise<{
+  success: boolean
+  inserted: boolean
+  error?: any
+}> {
+  try {
+    const relationship = await db
+      .insert(profilesToProjects)
+      .values({
+        projectId,
+        profileId,
+      })
+      .returning()
+
+    const success = relationship.at(0)?.profileId === profileId
+    return {
+      success,
+      inserted: true,
+    }
+  } catch (error) {
+    console.error(error)
+
+    /// Check if the error is due to a duplicate key violation.
+    if ((error as PostgresError)?.code === '23505') {
+      return {
+        success: true,
+        inserted: false,
+        error,
+      }
+    }
+  }
+
+  return {
+    success: false,
+    inserted: false,
+  }
+}
+
+/**
+ * Removes an owner from a project.
+ * @param projectId - The ID of the project.
+ * @param profileId - The ID of the profile to remove as an owner.
+ * @returns A Promise that resolves when the profile-to-project relation is successfully deleted.
+ */
+export async function removeOwner(
+  projectId: string,
+  profileId: string,
+): Promise<void> {
+  await db
+    .delete(profilesToProjects)
+    .where(
+      and(
+        eq(profilesToProjects.projectId, projectId),
+        eq(profilesToProjects.profileId, profileId),
+      ),
+    )
+}
+
+/**
+ * Retriev the owners of a project.
+ * @param projectId - The ID of the project.
+ * @returns A Promise that resolves to an array of profiles.
+ */
+export async function getOwners(projectId: string): Promise<Profile[]> {
+  const owners = await db.query.profilesToProjects.findMany({
+    where: eq(profilesToProjects.projectId, projectId),
+    with: {
+      profile: true,
+    },
+  })
+  return owners.map((owner) => owner.profile)
 }
