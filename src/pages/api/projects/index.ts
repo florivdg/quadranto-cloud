@@ -14,6 +14,10 @@ export const GET: APIRoute = async ({ params, request }) => {
   })
 }
 
+/**
+ * Handler function for the POST request to create a new project.
+ * @returns - The response object containing the newly created project.
+ */
 export const POST: APIRoute = async ({ request }) => {
   const data: NewProject = await request.json()
 
