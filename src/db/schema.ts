@@ -20,7 +20,7 @@ export const profiles = pgTable(
   {
     id: uuid('id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     name: varchar('name', { length: 1024 }).notNull(),
     email: varchar('email', { length: 1024 }).notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -72,7 +72,7 @@ export const sessions = pgTable(
     id: text('id').primaryKey(),
     userId: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     expiresAt: timestamp('expires_at', {
       withTimezone: true,
       mode: 'date',
