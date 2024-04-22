@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm'
+import { and, count, eq } from 'drizzle-orm'
 import { type PostgresError } from 'postgres'
 import { db } from '@/db'
 import {
@@ -6,8 +6,16 @@ import {
   type NewProject,
   projects,
   profilesToProjects,
+  tasks,
   type Profile,
 } from '@/db/schema'
+
+/**
+ * A project with the count of tasks associated with it.
+ */
+type ProjectWithTaskCount = Project & {
+  taskCount: number
+}
 
 /**
  * Retrieves a list of projects from the database.
@@ -25,7 +33,7 @@ export async function listProjects(): Promise<Project[]> {
 export async function getProject(
   id: string,
   withOwners = true,
-): Promise<Project | undefined> {
+): Promise<ProjectWithTaskCount | undefined> {
   const project = await db.query.projects.findFirst({
     with: {
       owners: withOwners
@@ -39,7 +47,20 @@ export async function getProject(
     },
     where: eq(projects.id, id),
   })
-  return project
+
+  /// Get task count
+  const taskCount = await db
+    .select({ count: count(projects.id) })
+    .from(tasks)
+    .where(eq(tasks.projectId, id))
+
+  /// Set the task count on the project
+  const projectWithTaskCount = {
+    ...project,
+    taskCount: taskCount[0].count,
+  } as ProjectWithTaskCount
+
+  return projectWithTaskCount
 }
 
 /**
