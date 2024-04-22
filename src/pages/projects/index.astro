@@ -1,9 +1,8 @@
 ---
-import { db } from '@/db'
-import { type Project, projects } from '@/db/schema'
+import { listProjects } from '@/db/client/projects'
 import App from '@/layouts/App.astro'
 
-const result: Project[] = await db.select().from(projects)
+const projects = await listProjects()
 
 function formatDateTime(date: Date): string {
   return new Intl.DateTimeFormat('de-DE', {
@@ -34,7 +33,7 @@ function formatDateTime(date: Date): string {
       </thead>
       <tbody>
         {
-          result.map((project) => (
+          projects.map((project) => (
             <tr>
               <td class="py-2 pr-2">{project.id}</td>
               <td class="p-2">

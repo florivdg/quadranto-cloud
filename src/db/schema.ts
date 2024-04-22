@@ -54,7 +54,7 @@ export const projects = pgTable('projects', {
  * Define the relations for the `projects` schema.
  */
 export const projectRelations = relations(projects, ({ many }) => ({
-  usersToProfiles: many(profilesToProjects),
+  owners: many(profilesToProjects),
 }))
 
 /**
@@ -138,3 +138,5 @@ export type Project = typeof projects.$inferSelect
 export type NewProject = typeof projects.$inferInsert
 export type Task = typeof tasks.$inferSelect
 export type NewTask = typeof tasks.$inferInsert
+export type ProfileToProject = typeof profilesToProjects.$inferSelect
+export type NewProfileToProject = typeof profilesToProjects.$inferInsert
