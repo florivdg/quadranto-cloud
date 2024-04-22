@@ -20,11 +20,26 @@ export async function listProjects(): Promise<Project[]> {
 /**
  * Retrieves a project by its ID.
  * @param id - The ID of the project to retrieve.
- * @returns A Promise that resolves to the project if found, or null if not found.
+ * @returns A Promise that resolves to the project if found, or undefined if not found.
  */
-export async function getProject(id: string): Promise<Project | null> {
-  const project = await db.select().from(projects).where(eq(projects.id, id))
-  return project[0] ?? null
+export async function getProject(
+  id: string,
+  withOwners = true,
+): Promise<Project | undefined> {
+  const project = await db.query.projects.findFirst({
+    with: {
+      owners: withOwners
+        ? {
+            columns: {},
+            with: {
+              profile: true,
+            },
+          }
+        : undefined,
+    },
+    where: eq(projects.id, id),
+  })
+  return project
 }
 
 /**

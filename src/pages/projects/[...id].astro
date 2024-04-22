@@ -1,23 +1,17 @@
 ---
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
-import { tasks, profilesToProjects } from '@/db/schema'
+import { tasks } from '@/db/schema'
 import App from '@/layouts/App.astro'
 import { getProject } from '@/db/client/projects'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/projects')
 
-const project = await getProject(id)
+const project = await getProject(id, false)
 if (!project) return Astro.redirect('/404')
 
 const allTasks = await db.select().from(tasks).where(eq(tasks.projectId, id))
-const owners = await db.query.profilesToProjects.findMany({
-  where: eq(profilesToProjects.projectId, id),
-  with: {
-    profile: true,
-  },
-})
 ---
 
 <App title={project.title}>
@@ -28,8 +22,4 @@ const owners = await db.query.profilesToProjects.findMany({
   <h2 class="text-3xl">Tasks</h2>
 
   <pre class="whitespace-pre-wrap">{JSON.stringify(allTasks, null, 2)}</pre>
-
-  <h2 class="text-3xl">Owners</h2>
-
-  <pre class="whitespace-pre-wrap">{JSON.stringify(owners, null, 2)}</pre>
 </App>

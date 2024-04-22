@@ -54,7 +54,7 @@ export const projects = pgTable('projects', {
  * Define the relations for the `projects` schema.
  */
 export const projectRelations = relations(projects, ({ many }) => ({
-  usersToProfiles: many(profilesToProjects),
+  owners: many(profilesToProjects),
 }))
 
 /**
