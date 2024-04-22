@@ -9,6 +9,7 @@ import {
   pgEnum,
   uniqueIndex,
   primaryKey,
+  index,
 } from 'drizzle-orm/pg-core'
 
 /**
@@ -17,7 +18,9 @@ import {
 export const profiles = pgTable(
   'profiles',
   {
-    id: uuid('id').defaultRandom().primaryKey(),
+    id: uuid('id')
+      .notNull()
+      .references(() => users.id),
     name: varchar('name', { length: 1024 }).notNull(),
     email: varchar('email', { length: 1024 }).notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -25,6 +28,7 @@ export const profiles = pgTable(
   },
   (table) => {
     return {
+      userIdIdx: uniqueIndex('id_idx').on(table.id),
       emailIdx: uniqueIndex('email_idx').on(table.email),
     }
   },
@@ -33,10 +37,54 @@ export const profiles = pgTable(
 /**
  * Define the relations for the `profiles` schema.
  */
-export const profilesRelations = relations(profiles, ({ many }) => ({
+export const profilesRelations = relations(profiles, ({ one, many }) => ({
   usersToProjects: many(profilesToProjects),
   tasks: many(tasks),
+  user: one(users),
 }))
+
+/**
+ * Define the `users` schema for the database.
+ */
+export const users = pgTable('users', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  username: varchar('username', { length: 128 }).notNull().unique(),
+  password: varchar('password', { length: 128 }).notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+/**
+ * Define the relations for the `users` schema.
+ */
+export const usersRelations = relations(users, ({ one }) => ({
+  profile: one(profiles, {
+    fields: [users.id],
+    references: [profiles.id],
+  }),
+}))
+
+/**
+ * Define the `sessions` schema for the database.
+ */
+export const sessions = pgTable(
+  'sessions',
+  {
+    id: text('id').primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    expiresAt: timestamp('expires_at', {
+      withTimezone: true,
+      mode: 'date',
+    }).notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => {
+    return {
+      sessionUserIdIdx: index('session_user_id_idx').on(table.userId),
+    }
+  },
+)
 
 /**
  * Define the `projects` schema for the database.
@@ -132,6 +180,8 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
 /**
  * Infer types.
  */
+export type User = typeof users.$inferSelect
+export type NewUser = typeof users.$inferInsert
 export type Profile = typeof profiles.$inferSelect
 export type NewProfile = typeof profiles.$inferInsert
 export type Project = typeof projects.$inferSelect
