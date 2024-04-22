@@ -11,6 +11,7 @@ describe('isUUID', () => {
     expect(isUUID('123e4567-e89b-12d3-a456-42661417400')).toBe(false) // Missing a character
     expect(isUUID('123e4567-e89b-12d3-a456-4266141740000')).toBe(false) // Extra character
     expect(isUUID('123e4567-e89b-12d3-a456-42661417400g')).toBe(false) // Invalid character (g)
+    expect(isUUID('123e4567-e89b-12d3-a456-42661417400 ')).toBe(false) // Invalid character (space)
     expect(isUUID('')).toBe(false) // Empty string
   })
 
