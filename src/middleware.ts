@@ -2,7 +2,11 @@ import { lucia } from '@/lib/auth'
 import { defineMiddleware } from 'astro:middleware'
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const sessionId = context.cookies.get(lucia.sessionCookieName)?.value ?? null
+  const authorizationHeader = context.request.headers.get('Authorization')
+  const sessionId =
+    context.cookies.get(lucia.sessionCookieName)?.value ??
+    lucia.readBearerToken(authorizationHeader ?? '') ??
+    null
 
   if (!sessionId) {
     context.locals.user = null

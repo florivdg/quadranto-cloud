@@ -1,8 +1,7 @@
 import { PostgresError } from 'postgres'
 import type { APIContext } from 'astro'
 import { lucia } from '@/lib/auth'
-import { db } from '@/db'
-import { users } from '@/db/schema'
+import { createUser } from '@/db/client/users'
 
 export async function POST(context: APIContext): Promise<Response> {
   const formData = await context.request.formData()
@@ -43,12 +42,9 @@ export async function POST(context: APIContext): Promise<Response> {
   const hashedPassword = await Bun.password.hash(password)
 
   try {
-    const user = await db
-      .insert(users)
-      .values({ username, password: hashedPassword })
-      .returning()
+    const user = await createUser({ username, password: hashedPassword })
 
-    const userId = user[0].id
+    const userId = user.id
 
     const session = await lucia.createSession(userId, {})
     const sessionCookie = lucia.createSessionCookie(session.id)

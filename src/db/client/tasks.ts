@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { db } from '@/db'
-import { type Task, type NewTask, tasks, profiles } from '@/db/schema'
+import { type Task, type NewTask, tasks } from '@/db/schema'
 
 /**
  * Retrieves a list of tasks for a given project ID.
