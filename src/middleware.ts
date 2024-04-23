@@ -1,7 +1,7 @@
 import { lucia } from '@/lib/auth'
-import { defineMiddleware } from 'astro:middleware'
+import { sequence, defineMiddleware } from 'astro:middleware'
 
-export const onRequest = defineMiddleware(async (context, next) => {
+const session = defineMiddleware(async (context, next) => {
   const authorizationHeader = context.request.headers.get('Authorization')
   const sessionId =
     context.cookies.get(lucia.sessionCookieName)?.value ??
@@ -39,3 +39,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   return next()
 })
+
+const auth = defineMiddleware(async (context, next) => {
+  const whitelist = ['/login', '/signup', '/api/auth/login', '/api/auth/signup']
+
+  const reqUrl = new URL(context.request.url)
+
+  if (!context.locals.user && !whitelist.includes(reqUrl.pathname)) {
+    return context.redirect('/login')
+  }
+
+  return next()
+})
+
+export const onRequest = sequence(session, auth)
