@@ -21,7 +21,7 @@ const { title } = Astro.props
   <body>
     <div>
       <p>Hi, {user!.username}!</p>
-      <form method="post" action="/api/logout">
+      <form method="post" action="/api/auth/logout">
         <button>Sign out</button>
       </form>
     </div>
@@ -34,8 +34,7 @@ const { title } = Astro.props
     e.preventDefault()
     const formElement = e.target as HTMLFormElement
     await fetch(formElement.action, {
-      method: formElement.method,
-      body: new FormData(formElement),
+      method: 'DELETE',
     })
     window.location.href = '/login'
   })
