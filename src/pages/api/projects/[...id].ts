@@ -40,7 +40,7 @@ export const GET: APIRoute = async ({ locals, params, request }) => {
 /**
  * [PUT] Update project
  */
-export const PUT: APIRoute = async ({ params, request }) => {
+export const PUT: APIRoute = async ({ locals, params, request }) => {
   const { id } = params
   const data: Partial<Project> = await request.json()
 
@@ -70,7 +70,8 @@ export const PUT: APIRoute = async ({ params, request }) => {
   data.updatedAt = new Date()
 
   /// Run the actual update operation.
-  const project = await updateProject(id, data)
+  const { user } = locals
+  const project = await updateProject(id, data, user!.id)
 
   if (!project) {
     const status = 404
@@ -88,7 +89,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
 /**
  * [DELETE] Delete project
  */
-export const DELETE: APIRoute = async ({ params }) => {
+export const DELETE: APIRoute = async ({ locals, params }) => {
   const { id } = params
 
   if (!id || !isUUID(id)) {
@@ -103,7 +104,8 @@ export const DELETE: APIRoute = async ({ params }) => {
   }
 
   /// Run the actual delete operation.
-  await deleteProject(id)
+  const { user } = locals
+  await deleteProject(id, user!.id)
 
   return new Response(null, { status: 204 })
 }

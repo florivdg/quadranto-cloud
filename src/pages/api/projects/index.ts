@@ -1,4 +1,4 @@
-import { listProjects, createProject, addOwner } from '@/db/client/projects'
+import { listProjects, createProject } from '@/db/client/projects'
 import type { NewProject } from '@/db/schema'
 import type { APIRoute } from 'astro'
 
@@ -34,11 +34,8 @@ export const POST: APIRoute = async ({ locals, request }) => {
   }
 
   /// Run the actual insert operation.
-  const project = await createProject(data)
-
-  /// Set current user as first project owner.
   const { user } = locals
-  await addOwner(project.id, user!.id)
+  const project = await createProject(data, user!.id)
 
   return new Response(JSON.stringify(project), {
     headers: { 'Content-Type': 'application/json' },

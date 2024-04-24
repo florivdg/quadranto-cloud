@@ -38,14 +38,21 @@ export async function listProjects(userId: string): Promise<Project[]> {
 
 /**
  * Retrieves a project by its ID.
- * @param id - The ID of the project to retrieve.
+ * @param projectId - The ID of the project to retrieve.
+ * @param userId - The ID of the user making the request.
  * @returns A Promise that resolves to the project if found, or undefined if not found.
  */
 export async function getProject(
-  id: string,
+  projectId: string,
   userId: string,
   withOwners = true,
 ): Promise<ProjectWithTaskCountAndOwners | undefined> {
+  // * Check if the user is an owner of the project
+  if (!(await isOwner(projectId, userId))) {
+    return undefined
+  }
+
+  /// Query the database for the project
   const project = (await db.query.projects.findFirst({
     with: {
       owners: withOwners
@@ -62,18 +69,14 @@ export async function getProject(
           }
         : undefined,
     },
-    where: eq(projects.id, id),
+    where: eq(projects.id, projectId),
   })) as ProjectWithTaskCountAndOwners | undefined
-
-  /// * Check if user is owner of project, and bail if not.
-  const ownerIds = project?.owners.map((owner) => owner.user.id)
-  if (!ownerIds?.includes(userId)) return undefined
 
   /// Get task count
   const taskCount = await db
     .select({ count: count(projects.id) })
     .from(tasks)
-    .where(eq(tasks.projectId, id))
+    .where(eq(tasks.projectId, projectId))
 
   /// Set the task count on the project
   const projectWithTaskCount = {
@@ -89,36 +92,53 @@ export async function getProject(
  * @param data - The data for the new project.
  * @returns A promise that resolves to the created project.
  */
-export async function createProject(data: NewProject): Promise<Project> {
-  const project = await db.insert(projects).values(data).returning()
-  return project[0]
+export async function createProject(
+  data: NewProject,
+  userId: string,
+): Promise<Project> {
+  /// Set current user as first project owner.
+  const project = (await db.insert(projects).values(data).returning())[0]
+  await addOwner(project.id, userId)
+  return project
 }
 
 /**
  * Updates a project with the specified ID.
- * @param id - The ID of the project to update.
+ * @param projectId - The ID of the project to update.
  * @param data - The new project data.
+ * @param userId - The ID of the user making the request.
  * @returns A Promise that resolves to the updated project.
  */
 export async function updateProject(
-  id: string,
+  projectId: string,
   data: Partial<Project>,
-): Promise<Project> {
+  userId: string,
+): Promise<Project | undefined> {
+  // * Check if the user is an owner of the project
+  if (!(await isOwner(projectId, userId))) return undefined
+
   const project = await db
     .update(projects)
     .set(data)
-    .where(eq(projects.id, id))
+    .where(eq(projects.id, projectId))
     .returning()
   return project[0]
 }
 
 /**
  * Deletes a project from the database.
- * @param id - The ID of the project to delete.
+ * @param projectId - The ID of the project to delete.
+ * @param userId - The ID of the user making the request.
  * @returns A Promise that resolves when the project is successfully deleted.
  */
-export async function deleteProject(id: string): Promise<void> {
-  await db.delete(projects).where(eq(projects.id, id))
+export async function deleteProject(
+  projectId: string,
+  userId: string,
+): Promise<void> {
+  // * Check if the user is an owner of the project
+  if (!(await isOwner(projectId, userId))) return
+
+  await db.delete(projects).where(eq(projects.id, projectId))
 }
 
 /**
@@ -208,4 +228,26 @@ export async function getOwners(
     },
   })
   return owners.map((owner) => owner.user)
+}
+
+/**
+ * Checks if a user is an owner of a project.
+ * @param projectId - The ID of the project.
+ * @param userId - The ID of the user to check.
+ * @returns A Promise that resolves to a boolean indicating if the user is an owner of the project.
+ */
+export async function isOwner(
+  projectId: string,
+  userId: string,
+): Promise<boolean> {
+  const owner = await db.query.usersToProjects.findFirst({
+    where: and(
+      eq(usersToProjects.projectId, projectId),
+      eq(usersToProjects.userId, userId),
+    ),
+  })
+
+  console.log('owner', owner)
+
+  return !!owner
 }
