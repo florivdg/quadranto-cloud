@@ -13,37 +13,6 @@ import {
 } from 'drizzle-orm/pg-core'
 
 /**
- * Define the `user profiles` schema for the database.
- */
-export const profiles = pgTable(
-  'profiles',
-  {
-    id: uuid('id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    name: varchar('name', { length: 1024 }).notNull(),
-    email: varchar('email', { length: 1024 }).notNull(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp('updated_at'),
-  },
-  (table) => {
-    return {
-      userIdIdx: uniqueIndex('id_idx').on(table.id),
-      emailIdx: uniqueIndex('email_idx').on(table.email),
-    }
-  },
-)
-
-/**
- * Define the relations for the `profiles` schema.
- */
-export const profilesRelations = relations(profiles, ({ one, many }) => ({
-  usersToProjects: many(profilesToProjects),
-  tasks: many(tasks),
-  user: one(users),
-}))
-
-/**
  * Define the `users` schema for the database.
  */
 export const users = pgTable('users', {
@@ -56,11 +25,13 @@ export const users = pgTable('users', {
 /**
  * Define the relations for the `users` schema.
  */
-export const usersRelations = relations(users, ({ one }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   profile: one(profiles, {
     fields: [users.id],
     references: [profiles.id],
   }),
+  projects: many(usersToProjects),
+  tasks: many(tasks),
 }))
 
 /**
@@ -87,6 +58,38 @@ export const sessions = pgTable(
 )
 
 /**
+ * Define the `user profiles` schema for the database.
+ */
+export const profiles = pgTable(
+  'profiles',
+  {
+    id: uuid('id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    name: varchar('name', { length: 1024 }).notNull(),
+    email: varchar('email', { length: 1024 }).notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at'),
+  },
+  (table) => {
+    return {
+      userIdIdx: uniqueIndex('id_idx').on(table.id),
+      emailIdx: uniqueIndex('email_idx').on(table.email),
+    }
+  },
+)
+
+/**
+ * Define the relations for the `profiles` schema.
+ */
+export const profilesRelations = relations(profiles, ({ one }) => ({
+  user: one(users, {
+    fields: [profiles.id],
+    references: [users.id],
+  }),
+}))
+
+/**
  * Define the `projects` schema for the database.
  */
 export const projects = pgTable('projects', {
@@ -102,40 +105,40 @@ export const projects = pgTable('projects', {
  * Define the relations for the `projects` schema.
  */
 export const projectRelations = relations(projects, ({ many }) => ({
-  owners: many(profilesToProjects),
+  owners: many(usersToProjects),
 }))
 
 /**
- * Define the `project_profiles` join table schema for the database.
+ * Define the `project_users` join table schema for the database.
  */
-export const profilesToProjects = pgTable(
-  'project_profiles',
+export const usersToProjects = pgTable(
+  'projects_users',
   {
-    profileId: uuid('profile_id')
+    userId: uuid('user_id')
       .notNull()
-      .references(() => profiles.id),
+      .references(() => users.id),
     projectId: uuid('project_id')
       .notNull()
       .references(() => projects.id),
   },
   (t) => ({
-    pk: primaryKey({ columns: [t.profileId, t.projectId] }),
+    pk: primaryKey({ columns: [t.userId, t.projectId] }),
   }),
 )
 
 /**
- * Define the relations for the `project_profiles` join table schema.
+ * Define the relations for the `project_users` join table schema.
  */
-export const profilesToProjectsRelations = relations(
-  profilesToProjects,
+export const usersToProjectsRelations = relations(
+  usersToProjects,
   ({ one }) => ({
     project: one(projects, {
-      fields: [profilesToProjects.projectId],
+      fields: [usersToProjects.projectId],
       references: [projects.id],
     }),
-    profile: one(profiles, {
-      fields: [profilesToProjects.profileId],
-      references: [profiles.id],
+    user: one(users, {
+      fields: [usersToProjects.userId],
+      references: [users.id],
     }),
   }),
 )
@@ -164,16 +167,16 @@ export const tasks = pgTable('tasks', {
   projectId: uuid('project_id')
     .notNull()
     .references(() => projects.id),
-  ownerId: uuid('owner_id').references(() => profiles.id),
+  ownerId: uuid('owner_id').references(() => users.id),
 })
 
 /**
  * Define the relations for the `tasks` schema.
  */
 export const tasksRelations = relations(tasks, ({ one }) => ({
-  owner: one(profiles, {
+  owner: one(users, {
     fields: [tasks.ownerId],
-    references: [profiles.id],
+    references: [users.id],
   }),
 }))
 
@@ -188,5 +191,5 @@ export type Project = typeof projects.$inferSelect
 export type NewProject = typeof projects.$inferInsert
 export type Task = typeof tasks.$inferSelect
 export type NewTask = typeof tasks.$inferInsert
-export type ProfileToProject = typeof profilesToProjects.$inferSelect
-export type NewProfileToProject = typeof profilesToProjects.$inferInsert
+export type UserToProject = typeof usersToProjects.$inferSelect
+export type NewUserToProject = typeof usersToProjects.$inferInsert
