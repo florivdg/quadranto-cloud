@@ -1,17 +1,17 @@
 ---
-import { eq } from 'drizzle-orm'
-import { db } from '@/db'
-import { tasks } from '@/db/schema'
 import App from '@/layouts/App.astro'
 import { getProject } from '@/db/client/projects'
+import { listTasksForProject } from '@/db/client/tasks'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/projects')
 
-const project = await getProject(id, false)
+const { user } = Astro.locals
+const project = await getProject(id, user!.id)
+
 if (!project) return Astro.redirect('/404')
 
-const allTasks = await db.select().from(tasks).where(eq(tasks.projectId, id))
+const allTasks = await listTasksForProject(project.id)
 ---
 
 <App title={project.title}>

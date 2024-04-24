@@ -6,8 +6,9 @@ import type { APIRoute } from 'astro'
  * Handler function for the GET request to retrieve projects.
  * @returns - The response object containing the list of projects.
  */
-export const GET: APIRoute = async ({ params, request }) => {
-  const projects = await listProjects()
+export const GET: APIRoute = async ({ locals, params, request }) => {
+  const { user } = locals
+  const projects = await listProjects(user!.id)
 
   return new Response(JSON.stringify(projects), {
     headers: { 'Content-Type': 'application/json' },

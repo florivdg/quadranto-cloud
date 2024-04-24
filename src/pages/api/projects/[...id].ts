@@ -6,7 +6,7 @@ import type { APIRoute } from 'astro'
 /**
  * [GET] Read project
  */
-export const GET: APIRoute = async ({ params, request }) => {
+export const GET: APIRoute = async ({ locals, params, request }) => {
   const { id } = params
 
   if (!id || !isUUID(id)) {
@@ -21,7 +21,8 @@ export const GET: APIRoute = async ({ params, request }) => {
   }
 
   /// Retrieve the project from the database.
-  const project = await getProject(id)
+  const { user } = locals
+  const project = await getProject(id, user!.id)
 
   if (!project) {
     const status = 404

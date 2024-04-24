@@ -7,22 +7,33 @@ import {
   projects,
   usersToProjects,
   tasks,
+  users,
   type User,
 } from '@/db/schema'
 
 /**
  * A project with the count of tasks associated with it.
  */
-type ProjectWithTaskCount = Project & {
+type ProjectWithTaskCountAndOwners = Project & {
   taskCount: number
+  owners: { user: User }[]
 }
 
 /**
  * Retrieves a list of projects from the database.
+ * @param userId - The ID of the user to retrieve projects for.
  * @returns A promise that resolves to an array of projects.
  */
-export async function listProjects(): Promise<Project[]> {
-  return await db.select().from(projects)
+export async function listProjects(userId: string): Promise<Project[]> {
+  const q = await db
+    .select()
+    .from(usersToProjects)
+    .leftJoin(users, eq(usersToProjects.userId, users.id))
+    .leftJoin(projects, eq(usersToProjects.projectId, projects.id))
+    .where(eq(users.id, userId))
+
+  const results = q.map((row) => row.projects).filter(Boolean) as Project[]
+  return results
 }
 
 /**
@@ -32,15 +43,17 @@ export async function listProjects(): Promise<Project[]> {
  */
 export async function getProject(
   id: string,
+  userId: string,
   withOwners = true,
-): Promise<ProjectWithTaskCount | undefined> {
-  const project = await db.query.projects.findFirst({
+): Promise<ProjectWithTaskCountAndOwners | undefined> {
+  const project = (await db.query.projects.findFirst({
     with: {
       owners: withOwners
         ? {
             columns: {},
             with: {
               user: {
+                columns: { password: false },
                 with: {
                   profile: true,
                 },
@@ -50,7 +63,11 @@ export async function getProject(
         : undefined,
     },
     where: eq(projects.id, id),
-  })
+  })) as ProjectWithTaskCountAndOwners | undefined
+
+  /// * Check if user is owner of project, and bail if not.
+  const ownerIds = project?.owners.map((owner) => owner.user.id)
+  if (!ownerIds?.includes(userId)) return undefined
 
   /// Get task count
   const taskCount = await db
@@ -62,7 +79,7 @@ export async function getProject(
   const projectWithTaskCount = {
     ...project,
     taskCount: taskCount[0].count,
-  } as ProjectWithTaskCount
+  } as ProjectWithTaskCountAndOwners
 
   return projectWithTaskCount
 }
@@ -176,11 +193,14 @@ export async function removeOwner(
  * @param projectId - The ID of the project.
  * @returns A Promise that resolves to an array of users.
  */
-export async function getOwners(projectId: string): Promise<User[]> {
+export async function getOwners(
+  projectId: string,
+): Promise<Omit<User, 'password'>[]> {
   const owners = await db.query.usersToProjects.findMany({
     where: eq(usersToProjects.projectId, projectId),
     with: {
       user: {
+        columns: { password: false },
         with: {
           profile: true,
         },
