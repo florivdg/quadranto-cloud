@@ -8,13 +8,13 @@ import { type APIRoute } from 'astro'
  */
 export const POST: APIRoute = async ({ params, request }) => {
   const { projectId } = params
-  const { profileId } = await request.json()
+  const { userId } = await request.json()
 
-  if (!projectId || !profileId || !isUUID(projectId) || !isUUID(profileId)) {
+  if (!projectId || !userId || !isUUID(projectId) || !isUUID(userId)) {
     const status = 400
     return new Response(
       JSON.stringify({
-        message: 'Missing project or profile ID or malformed UUID(s).',
+        message: 'Missing project or user ID or malformed UUID(s).',
         code: status,
       }),
       { status, headers: { 'Content-Type': 'application/json' } },
@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ params, request }) => {
   }
 
   /// Add the owner to the project in the database.
-  const insert = await addOwner(projectId, profileId)
+  const insert = await addOwner(projectId, userId)
 
   return new Response(JSON.stringify(insert), {
     headers: { 'Content-Type': 'application/json' },

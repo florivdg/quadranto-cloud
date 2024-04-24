@@ -46,7 +46,15 @@ const auth = defineMiddleware(async (context, next) => {
   const reqUrl = new URL(context.request.url)
 
   if (!context.locals.user && !whitelist.includes(reqUrl.pathname)) {
-    /// TODO: Return 401 response when hitting an API route
+    // Return 401 response when hitting an API route
+    if (reqUrl.pathname.startsWith('/api')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+    }
     return context.redirect('/login')
   }
 

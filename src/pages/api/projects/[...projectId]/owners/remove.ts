@@ -8,9 +8,9 @@ import { type APIRoute } from 'astro'
  */
 export const DELETE: APIRoute = async ({ params, request }) => {
   const { projectId } = params
-  const { profileId } = await request.json()
+  const { userId } = await request.json()
 
-  if (!projectId || !profileId || !isUUID(projectId) || !isUUID(profileId)) {
+  if (!projectId || !userId || !isUUID(projectId) || !isUUID(userId)) {
     const status = 400
     return new Response(
       JSON.stringify({
@@ -23,7 +23,7 @@ export const DELETE: APIRoute = async ({ params, request }) => {
 
   /// Cannot remove the last owner from a project.
   const owners = await getOwners(projectId)
-  if (owners.length === 1 && owners[0].id === profileId) {
+  if (owners.length === 1 && owners[0].id === userId) {
     const status = 400
     return new Response(
       JSON.stringify({
@@ -35,7 +35,7 @@ export const DELETE: APIRoute = async ({ params, request }) => {
   }
 
   /// Remove the owner from the project in the database.
-  await removeOwner(projectId, profileId)
+  await removeOwner(projectId, userId)
 
   return new Response(null, { status: 204 })
 }

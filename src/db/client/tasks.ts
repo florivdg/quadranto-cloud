@@ -15,9 +15,8 @@ export async function listTasksForProject(projectId: string): Promise<Task[]> {
  * Retrieves a list of tasks for the current owner.
  * @returns A promise that resolves to an array of tasks.
  */
-export async function listMyTasks(): Promise<Task[]> {
-  const profileId = 'e444519a-d019-4ca4-bc57-a3263c978d96' /// TODO: Get the current user's profile ID.
-  return await db.select().from(tasks).where(eq(tasks.ownerId, profileId))
+export async function listMyTasks(userId: string): Promise<Task[]> {
+  return await db.select().from(tasks).where(eq(tasks.ownerId, userId))
 }
 
 /**

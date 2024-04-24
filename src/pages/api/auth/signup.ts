@@ -20,6 +20,9 @@ export async function POST(context: APIContext): Promise<Response> {
       }),
       {
         status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
     )
   }
@@ -35,6 +38,9 @@ export async function POST(context: APIContext): Promise<Response> {
       }),
       {
         status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
     )
   }
@@ -63,6 +69,9 @@ export async function POST(context: APIContext): Promise<Response> {
         }),
         {
           status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
       )
     }
@@ -72,6 +81,9 @@ export async function POST(context: APIContext): Promise<Response> {
       }),
       {
         status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
     )
   }

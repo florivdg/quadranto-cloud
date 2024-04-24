@@ -6,8 +6,9 @@ import type { APIRoute } from 'astro'
  * Handler function for the GET request to retrieve tasks.
  * @returns - The response object containing the list of tasks.
  */
-export const GET: APIRoute = async ({ params }) => {
-  const tasks = await listMyTasks()
+export const GET: APIRoute = async ({ locals }) => {
+  const { user } = locals
+  const tasks = await listMyTasks(user!.id)
 
   return new Response(JSON.stringify(tasks), {
     headers: { 'Content-Type': 'application/json' },

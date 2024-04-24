@@ -5,9 +5,9 @@ import {
   type Project,
   type NewProject,
   projects,
-  profilesToProjects,
+  usersToProjects,
   tasks,
-  type Profile,
+  type User,
 } from '@/db/schema'
 
 /**
@@ -40,7 +40,11 @@ export async function getProject(
         ? {
             columns: {},
             with: {
-              profile: true,
+              user: {
+                with: {
+                  profile: true,
+                },
+              },
             },
           }
         : undefined,
@@ -103,12 +107,12 @@ export async function deleteProject(id: string): Promise<void> {
 /**
  * Adds an owner to a project.
  * @param projectId - The ID of the project.
- * @param profileId - The ID of the profile to add as an owner.
+ * @param userId - The ID of the profile to add as an owner.
  * @returns A Promise that resolves to an object indicating the success of the operation.
  */
 export async function addOwner(
   projectId: string,
-  profileId: string,
+  userId: string,
 ): Promise<{
   success: boolean
   inserted: boolean
@@ -116,14 +120,14 @@ export async function addOwner(
 }> {
   try {
     const relationship = await db
-      .insert(profilesToProjects)
+      .insert(usersToProjects)
       .values({
         projectId,
-        profileId,
+        userId,
       })
       .returning()
 
-    const success = relationship.at(0)?.profileId === profileId
+    const success = relationship.at(0)?.userId === userId
     return {
       success,
       inserted: true,
@@ -150,19 +154,19 @@ export async function addOwner(
 /**
  * Removes an owner from a project.
  * @param projectId - The ID of the project.
- * @param profileId - The ID of the profile to remove as an owner.
+ * @param userId - The ID of the user to remove as an owner.
  * @returns A Promise that resolves when the profile-to-project relation is successfully deleted.
  */
 export async function removeOwner(
   projectId: string,
-  profileId: string,
+  userId: string,
 ): Promise<void> {
   await db
-    .delete(profilesToProjects)
+    .delete(usersToProjects)
     .where(
       and(
-        eq(profilesToProjects.projectId, projectId),
-        eq(profilesToProjects.profileId, profileId),
+        eq(usersToProjects.projectId, projectId),
+        eq(usersToProjects.userId, userId),
       ),
     )
 }
@@ -170,14 +174,18 @@ export async function removeOwner(
 /**
  * Retriev the owners of a project.
  * @param projectId - The ID of the project.
- * @returns A Promise that resolves to an array of profiles.
+ * @returns A Promise that resolves to an array of users.
  */
-export async function getOwners(projectId: string): Promise<Profile[]> {
-  const owners = await db.query.profilesToProjects.findMany({
-    where: eq(profilesToProjects.projectId, projectId),
+export async function getOwners(projectId: string): Promise<User[]> {
+  const owners = await db.query.usersToProjects.findMany({
+    where: eq(usersToProjects.projectId, projectId),
     with: {
-      profile: true,
+      user: {
+        with: {
+          profile: true,
+        },
+      },
     },
   })
-  return owners.map((owner) => owner.profile)
+  return owners.map((owner) => owner.user)
 }
