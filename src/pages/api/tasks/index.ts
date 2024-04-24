@@ -19,7 +19,7 @@ export const GET: APIRoute = async ({ locals }) => {
  * Handler function for the POST request to create a new task.
  * @returns - The response object containing the newly created task.
  */
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ locals, request }) => {
   const data: NewTask = await request.json()
 
   if (!data) {
@@ -34,7 +34,8 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   /// Run the actual insert operation.
-  const task = await createTask(data)
+  const { user } = locals
+  const task = await createTask(data, user!.id)
 
   return new Response(JSON.stringify(task), {
     headers: { 'Content-Type': 'application/json' },

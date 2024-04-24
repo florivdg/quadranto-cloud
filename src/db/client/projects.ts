@@ -25,14 +25,14 @@ type ProjectWithTaskCountAndOwners = Project & {
  * @returns A promise that resolves to an array of projects.
  */
 export async function listProjects(userId: string): Promise<Project[]> {
-  const q = await db
+  const rows = await db
     .select()
     .from(usersToProjects)
     .leftJoin(users, eq(usersToProjects.userId, users.id))
     .leftJoin(projects, eq(usersToProjects.projectId, projects.id))
     .where(eq(users.id, userId))
 
-  const results = q.map((row) => row.projects).filter(Boolean) as Project[]
+  const results = rows.map((row) => row.projects).filter(Boolean) as Project[]
   return results
 }
 
@@ -96,9 +96,12 @@ export async function createProject(
   data: NewProject,
   userId: string,
 ): Promise<Project> {
-  /// Set current user as first project owner.
+  /// Insert the project into the database.
   const project = (await db.insert(projects).values(data).returning())[0]
+
+  /// Set current user as first project owner.
   await addOwner(project.id, userId)
+
   return project
 }
 
@@ -227,6 +230,7 @@ export async function getOwners(
       },
     },
   })
+
   return owners.map((owner) => owner.user)
 }
 
@@ -240,6 +244,8 @@ export async function isOwner(
   projectId: string,
   userId: string,
 ): Promise<boolean> {
+  if (!projectId || !userId) return false
+
   const owner = await db.query.usersToProjects.findFirst({
     where: and(
       eq(usersToProjects.projectId, projectId),
