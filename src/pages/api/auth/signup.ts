@@ -62,7 +62,7 @@ export async function POST(context: APIContext): Promise<Response> {
 
     return new Response()
   } catch (e) {
-    if (e instanceof PostgresError && e.code === '23505') {
+    if ((e as PostgresError)?.code === '23505') {
       return new Response(
         JSON.stringify({
           error: 'Username already used',
