@@ -1,45 +1,58 @@
 <template>
-  <Card class="w-full max-w-sm">
+  <Card class="mx-auto max-w-sm">
     <form @submit.prevent="handleLogin">
       <CardHeader>
-        <CardTitle class="text-2xl">Login</CardTitle>
+        <CardTitle class="text-2xl"> Login </CardTitle>
         <CardDescription>
-          Enter your username to login to your account.
+          Enter your username below to login to your account
         </CardDescription>
       </CardHeader>
-      <CardContent class="grid gap-4">
-        <Alert v-if="errorMessage" variant="destructive">
+      <CardContent>
+        <Alert v-if="errorMessage" variant="destructive" class="-mt-2 mb-4">
           <AlertCircle class="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
             {{ errorMessage }}
           </AlertDescription>
         </Alert>
-        <div class="grid gap-2">
-          <Label for="username">Username</Label>
-          <Input
-            v-model="username"
-            id="username"
-            type="text"
-            placeholder="quadranaut"
-            autocomplete="username"
-            required
-          />
+        <div class="grid gap-4">
+          <div class="grid gap-2">
+            <Label for="username">Username</Label>
+            <Input
+              v-model="username"
+              id="username"
+              type="text"
+              placeholder="quadranaut"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="grid gap-2">
+            <div class="flex items-center">
+              <Label for="password">Password</Label>
+              <a
+                href="/password-reset"
+                class="ml-auto inline-block text-sm underline"
+              >
+                Forgot your password?
+              </a>
+            </div>
+            <Input
+              v-model="password"
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <Button type="submit" class="w-full">Sign in</Button>
         </div>
-        <div class="grid gap-2">
-          <Label for="password">Password</Label>
-          <Input
-            v-model="password"
-            id="password"
-            type="password"
-            autocomplete="current-password"
-            required
-          />
+        <div class="mt-4 text-center text-sm">
+          Don't have an account?
+          <a href="/signup" class="underline">Sign up</a>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button class="w-full" type="submit">Sign in</Button>
-      </CardFooter>
     </form>
   </Card>
 </template>
@@ -51,7 +64,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
