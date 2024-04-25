@@ -47,7 +47,13 @@ const session = defineMiddleware(async (context, next) => {
  * Middleware for checking if a user is authenticated.
  */
 const auth = defineMiddleware(async (context, next) => {
-  const whitelist = ['/login', '/signup', '/api/auth/login', '/api/auth/signup']
+  const whitelist = [
+    '/login',
+    '/signup',
+    '/password-reset',
+    '/api/auth/login',
+    '/api/auth/signup',
+  ]
 
   const reqUrl = new URL(context.request.url)
 
