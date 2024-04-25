@@ -2,7 +2,8 @@
 import { listProjects } from '@/db/client/projects'
 import App from '@/layouts/App.astro'
 
-const projects = await listProjects()
+const { user } = Astro.locals
+const projects = await listProjects(user!.id)
 
 function formatDateTime(date: Date): string {
   return new Intl.DateTimeFormat('de-DE', {

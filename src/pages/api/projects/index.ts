@@ -6,8 +6,9 @@ import type { APIRoute } from 'astro'
  * Handler function for the GET request to retrieve projects.
  * @returns - The response object containing the list of projects.
  */
-export const GET: APIRoute = async ({ params, request }) => {
-  const projects = await listProjects()
+export const GET: APIRoute = async ({ locals }) => {
+  const { user } = locals
+  const projects = await listProjects(user!.id)
 
   return new Response(JSON.stringify(projects), {
     headers: { 'Content-Type': 'application/json' },
@@ -18,7 +19,7 @@ export const GET: APIRoute = async ({ params, request }) => {
  * Handler function for the POST request to create a new project.
  * @returns - The response object containing the newly created project.
  */
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ locals, request }) => {
   const data: NewProject = await request.json()
 
   if (!data) {
@@ -33,9 +34,8 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   /// Run the actual insert operation.
-  const project = await createProject(data)
-
-  /// TODO: Set current user as project owner.
+  const { user } = locals
+  const project = await createProject(data, user!.id)
 
   return new Response(JSON.stringify(project), {
     headers: { 'Content-Type': 'application/json' },

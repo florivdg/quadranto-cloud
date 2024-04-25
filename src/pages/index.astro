@@ -1,5 +1,10 @@
 ---
 import App from '@/layouts/App.astro'
+
+const user = Astro.locals.user
+if (!user) {
+  return Astro.redirect('/login')
+}
 ---
 
 <App title="Dashboard">

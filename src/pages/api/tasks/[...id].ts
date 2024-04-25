@@ -6,7 +6,7 @@ import type { APIRoute } from 'astro'
 /**
  * [GET] Read task
  */
-export const GET: APIRoute = async ({ params, request }) => {
+export const GET: APIRoute = async ({ locals, params }) => {
   const { id } = params
 
   if (!id || !isUUID(id)) {
@@ -21,7 +21,8 @@ export const GET: APIRoute = async ({ params, request }) => {
   }
 
   /// Retrieve the task from the database.
-  const task = await getTask(id)
+  const { user } = locals
+  const task = await getTask(id, user!.id)
 
   if (!task) {
     const status = 404
@@ -39,7 +40,7 @@ export const GET: APIRoute = async ({ params, request }) => {
 /**
  * [PUT] Update task
  */
-export const PUT: APIRoute = async ({ params, request }) => {
+export const PUT: APIRoute = async ({ locals, params, request }) => {
   const { id } = params
   const data: Partial<Task> = await request.json()
 
@@ -66,7 +67,8 @@ export const PUT: APIRoute = async ({ params, request }) => {
   }
 
   /// Update the task in the database.
-  const updatedTask = await updateTask(id, data)
+  const { user } = locals
+  const updatedTask = await updateTask(id, data, user!.id)
 
   return new Response(JSON.stringify(updatedTask), {
     headers: { 'Content-Type': 'application/json' },
@@ -76,7 +78,7 @@ export const PUT: APIRoute = async ({ params, request }) => {
 /**
  * [DELETE] Delete task
  */
-export const DELETE: APIRoute = async ({ params }) => {
+export const DELETE: APIRoute = async ({ locals, params }) => {
   const { id } = params
 
   if (!id || !isUUID(id)) {
@@ -91,7 +93,8 @@ export const DELETE: APIRoute = async ({ params }) => {
   }
 
   /// Delete the task from the database.
-  await deleteTask(id)
+  const { user } = locals
+  await deleteTask(id, user!.id)
 
   return new Response(null, { status: 204 })
 }
