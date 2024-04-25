@@ -1,6 +1,9 @@
 import { lucia } from '@/lib/auth'
 import { sequence, defineMiddleware } from 'astro:middleware'
 
+/**
+ * Middleware for creating and validating sessions.
+ */
 const session = defineMiddleware(async (context, next) => {
   const authorizationHeader = context.request.headers.get('Authorization')
   const sessionId =
@@ -40,6 +43,9 @@ const session = defineMiddleware(async (context, next) => {
   return next()
 })
 
+/**
+ * Middleware for checking if a user is authenticated.
+ */
 const auth = defineMiddleware(async (context, next) => {
   const whitelist = ['/login', '/signup', '/api/auth/login', '/api/auth/signup']
 
@@ -61,4 +67,7 @@ const auth = defineMiddleware(async (context, next) => {
   return next()
 })
 
+/**
+ * Middleware to run the session and auth middleware in sequence.
+ */
 export const onRequest = sequence(session, auth)

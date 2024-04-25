@@ -1,4 +1,4 @@
-import { getOwners, removeOwner } from '@/db/client/projects'
+import { getOwners } from '@/db/client/projects'
 import { isUUID } from '@/lib/validators'
 import { type APIRoute } from 'astro'
 
