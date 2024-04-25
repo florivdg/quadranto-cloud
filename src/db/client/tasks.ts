@@ -58,6 +58,12 @@ export async function createTask(
   // * Check if the user is an owner of the project
   if (!(await isOwner(data.projectId, userId))) return null
 
+  // * Check if the owner of the task is an owner of the project
+  if (data.ownerId && !(await isOwner(data.projectId, data.ownerId))) {
+    // * If the owner is not an owner of the project, remove the ownerId from the data
+    delete data.ownerId
+  }
+
   const task = await db.insert(tasks).values(data).returning()
   return task[0]
 }
@@ -79,6 +85,14 @@ export async function updateTask(
 
   // * Check if the user is an owner of the project
   if (!originalTask) return null
+
+  /// Also make sure that a new owner of the task is an owner of the project
+  if (data.ownerId && data.ownerId !== originalTask.ownerId) {
+    if (!(await isOwner(originalTask.projectId, data.ownerId))) {
+      // * If the new owner is not an owner of the project, remove the ownerId from the data
+      delete data.ownerId
+    }
+  }
 
   const task = await db
     .update(tasks)
