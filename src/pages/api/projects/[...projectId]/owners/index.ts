@@ -2,7 +2,7 @@ import { getOwners, removeOwner } from '@/db/client/projects'
 import { isUUID } from '@/lib/validators'
 import { type APIRoute } from 'astro'
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ locals, params }) => {
   const { projectId } = params
 
   if (!projectId || !isUUID(projectId)) {
@@ -16,7 +16,8 @@ export const GET: APIRoute = async ({ params }) => {
     )
   }
 
-  const owners = await getOwners(projectId)
+  const { user } = locals
+  const owners = await getOwners(projectId, user!.id)
 
   return new Response(JSON.stringify(owners), {
     headers: { 'Content-Type': 'application/json' },

@@ -100,7 +100,7 @@ export async function createProject(
   const project = (await db.insert(projects).values(data).returning())[0]
 
   /// Set current user as first project owner.
-  await addOwner(project.id, userId)
+  await addOwner(project.id, userId, userId, true)
 
   return project
 }
@@ -147,27 +147,40 @@ export async function deleteProject(
 /**
  * Adds an owner to a project.
  * @param projectId - The ID of the project.
- * @param userId - The ID of the profile to add as an owner.
+ * @param addUserId - The ID of the profile to add as an owner.
+ * @param requestingUserId - The ID of the user making the request.
+ * @param force - A boolean indicating if the operation should be forced.
  * @returns A Promise that resolves to an object indicating the success of the operation.
  */
 export async function addOwner(
   projectId: string,
-  userId: string,
+  addUserId: string,
+  requestingUserId: string,
+  force: boolean = false,
 ): Promise<{
   success: boolean
   inserted: boolean
   error?: any
 }> {
+  // * Check if the user is an owner of the project
+  if (!force && !(await isOwner(projectId, requestingUserId))) {
+    return {
+      success: false,
+      inserted: false,
+      error: new Error('User is not an owner of the project.'),
+    }
+  }
+
   try {
     const relationship = await db
       .insert(usersToProjects)
       .values({
         projectId,
-        userId,
+        userId: addUserId,
       })
       .returning()
 
-    const success = relationship.at(0)?.userId === userId
+    const success = relationship.at(0)?.userId === addUserId
     return {
       success,
       inserted: true,
@@ -194,31 +207,47 @@ export async function addOwner(
 /**
  * Removes an owner from a project.
  * @param projectId - The ID of the project.
- * @param userId - The ID of the user to remove as an owner.
+ * @param addUserId - The ID of the user to remove as an owner.
+ * @param requestingUserId - The ID of the user making the request.
  * @returns A Promise that resolves when the profile-to-project relation is successfully deleted.
  */
 export async function removeOwner(
   projectId: string,
-  userId: string,
-): Promise<void> {
+  addUserId: string,
+  requestingUserId: string,
+): Promise<boolean> {
+  // * Check if the user is an owner of the project
+  if (!(await isOwner(projectId, requestingUserId))) return false
+
+  /// Cannot remove the last owner from a project.
+  const owners = await getOwners(projectId, requestingUserId)
+  if (owners.length === 1) return false
+
   await db
     .delete(usersToProjects)
     .where(
       and(
         eq(usersToProjects.projectId, projectId),
-        eq(usersToProjects.userId, userId),
+        eq(usersToProjects.userId, addUserId),
       ),
     )
+
+  return true
 }
 
 /**
  * Retriev the owners of a project.
  * @param projectId - The ID of the project.
+ * @param requestingUserId - The ID of the user making the request.
  * @returns A Promise that resolves to an array of users.
  */
 export async function getOwners(
   projectId: string,
+  requestingUserId: string,
 ): Promise<Omit<User, 'password'>[]> {
+  // * Check if the user is an owner of the project
+  if (!(await isOwner(projectId, requestingUserId))) return []
+
   const owners = await db.query.usersToProjects.findMany({
     where: eq(usersToProjects.projectId, projectId),
     with: {
@@ -252,8 +281,6 @@ export async function isOwner(
       eq(usersToProjects.userId, userId),
     ),
   })
-
-  console.log('owner', owner)
 
   return !!owner
 }
