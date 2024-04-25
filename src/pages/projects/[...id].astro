@@ -11,7 +11,7 @@ const project = await getProject(id, user!.id)
 
 if (!project) return Astro.redirect('/404')
 
-const allTasks = await listTasksForProject(project.id)
+const allTasks = await listTasksForProject(project.id, user!.id)
 ---
 
 <App title={project.title}>
