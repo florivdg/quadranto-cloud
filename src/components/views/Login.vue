@@ -1,8 +1,8 @@
 <template>
-  <Card class="mx-auto max-w-sm">
+  <Card class="mx-auto min-w-96 max-w-sm">
     <form @submit.prevent="handleLogin">
       <CardHeader>
-        <CardTitle class="text-2xl"> Login </CardTitle>
+        <CardTitle class="text-2xl">Login</CardTitle>
         <CardDescription>
           Enter your username below to login to your account
         </CardDescription>
@@ -94,7 +94,8 @@ async function handleLogin() {
   if (response.ok) {
     window.location.href = '/'
   } else {
-    errorMessage.value = 'Invalid username or password'
+    const data = await response.json()
+    errorMessage.value = data.error ?? 'Invalid username or password'
   }
 }
 </script>
