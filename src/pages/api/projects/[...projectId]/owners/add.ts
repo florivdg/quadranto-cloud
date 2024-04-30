@@ -1,6 +1,7 @@
+import { type APIRoute } from 'astro'
+
 import { addOwner } from '@/db/client/projects'
 import { isUUID } from '@/lib/validators'
-import { type APIRoute } from 'astro'
 
 /**
  * Handler function for the POST request to add an owner to a project.

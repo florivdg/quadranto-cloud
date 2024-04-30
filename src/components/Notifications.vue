@@ -7,5 +7,6 @@
 
 <script setup lang="ts">
 import { Bell } from 'lucide-vue-next'
+
 import { Button } from '@/components/ui/button'
 </script>

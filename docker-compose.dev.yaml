@@ -5,7 +5,7 @@ services:
     networks:
       - default
     ports:
-      - "5438:5432"
+      - 5438:5432
     environment:
       POSTGRES_USER: quadranto
       POSTGRES_PASSWORD: quadranto

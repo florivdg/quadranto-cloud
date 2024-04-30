@@ -67,7 +67,8 @@ import {
   Users,
   LineChart,
 } from 'lucide-vue-next'
-import { Button } from '@/components/ui/button'
+
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 </script>

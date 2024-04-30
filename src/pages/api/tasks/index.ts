@@ -1,6 +1,7 @@
+import type { APIRoute } from 'astro'
+
 import { listMyTasks, createTask } from '@/db/client/tasks'
 import type { NewTask } from '@/db/schema'
-import type { APIRoute } from 'astro'
 
 /**
  * Handler function for the GET request to retrieve tasks.

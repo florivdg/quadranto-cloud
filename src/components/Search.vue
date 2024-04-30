@@ -13,5 +13,6 @@
 
 <script setup lang="ts">
 import { Search } from 'lucide-vue-next'
+
 import { Input } from '@/components/ui/input'
 </script>

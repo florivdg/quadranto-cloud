@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
+
 import * as schema from './schema'
 
 if (!Bun.env.DB_URL) {

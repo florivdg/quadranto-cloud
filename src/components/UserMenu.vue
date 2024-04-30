@@ -18,6 +18,8 @@
 
 <script setup lang="ts">
 import { CircleUser } from 'lucide-vue-next'
+
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +28,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
 
 /**
  * Handles the logout functionality.

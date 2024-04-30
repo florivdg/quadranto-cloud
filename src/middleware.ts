@@ -1,5 +1,6 @@
-import { lucia } from '@/lib/auth'
 import { sequence, defineMiddleware } from 'astro:middleware'
+
+import { lucia } from '@/lib/auth'
 
 /**
  * Middleware for creating and validating sessions.
