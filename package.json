@@ -24,18 +24,18 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.30.9",
     "lucia": "^3.2.0",
-    "lucide-vue-next": "^0.374.0",
+    "lucide-vue-next": "^0.376.0",
     "oslo": "^1.2.0",
     "postgres": "^3.4.4",
-    "radix-vue": "^1.7.2",
+    "radix-vue": "^1.7.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.5",
-    "vue": "^3.4.25"
+    "vue": "^3.4.26"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.0",
+    "@types/bun": "^1.1.1",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.20.17",
     "prettier": "^3.2.5",
