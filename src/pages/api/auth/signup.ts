@@ -1,4 +1,4 @@
-import { PostgresError } from 'postgres'
+import { type PostgresError } from 'postgres'
 import type { APIContext } from 'astro'
 import { lucia } from '@/lib/auth'
 import { createUser } from '@/db/client/users'
