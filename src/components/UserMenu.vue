@@ -10,9 +10,8 @@
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuItem>Settings</DropdownMenuItem>
-      <DropdownMenuItem>Support</DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>Logout</DropdownMenuItem>
+      <DropdownMenuItem @click="handleLogout">Logout</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
@@ -28,4 +27,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+
+/**
+ * Handles the logout functionality.
+ * Sends a DELETE request to the '/api/auth/logout' endpoint and redirects the user to the login page.
+ */
+async function handleLogout() {
+  await fetch('/api/auth/logout', {
+    method: 'DELETE',
+  })
+  window.location.href = '/login'
+}
 </script>
