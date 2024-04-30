@@ -1,6 +1,7 @@
+import { type APIRoute } from 'astro'
+
 import { getOwners } from '@/db/client/projects'
 import { isUUID } from '@/lib/validators'
-import { type APIRoute } from 'astro'
 
 export const GET: APIRoute = async ({ locals, params }) => {
   const { projectId } = params

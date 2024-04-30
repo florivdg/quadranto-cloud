@@ -1,6 +1,7 @@
+import type { APIRoute } from 'astro'
+
 import { listTasksForProject } from '@/db/client/tasks'
 import { isUUID } from '@/lib/validators'
-import type { APIRoute } from 'astro'
 
 /**
  * Handler function for the GET request to retrieve tasks for a project.

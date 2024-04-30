@@ -1,7 +1,8 @@
-import { PostgresError } from 'postgres'
 import type { APIContext } from 'astro'
-import { lucia } from '@/lib/auth'
+import { type PostgresError } from 'postgres'
+
 import { createUser } from '@/db/client/users'
+import { lucia } from '@/lib/auth'
 
 export async function POST(context: APIContext): Promise<Response> {
   const formData = await context.request.formData()

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
 import { Primitive, type PrimitiveProps } from 'radix-vue'
-import { type ButtonVariants, buttonVariants } from '.'
+import type { HTMLAttributes } from 'vue'
+
 import { cn } from '@/lib/utils'
+
+import { type ButtonVariants, buttonVariants } from '.'
 
 interface Props extends PrimitiveProps {
   variant?: ButtonVariants['variant']

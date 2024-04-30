@@ -1,6 +1,7 @@
+import type { APIRoute } from 'astro'
+
 import { listProjects, createProject } from '@/db/client/projects'
 import type { NewProject } from '@/db/schema'
-import type { APIRoute } from 'astro'
 
 /**
  * Handler function for the GET request to retrieve projects.

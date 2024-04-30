@@ -5,7 +5,14 @@
   "printWidth": 80,
   "tabWidth": 2,
   "useTabs": false,
-  "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  "plugins": [
+    "prettier-plugin-astro",
+    "prettier-plugin-tailwindcss",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "sortImports": true,
+  "importOrder": ["^@/(.*)$", "^@/ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
   "overrides": [
     {
       "files": "*.astro",

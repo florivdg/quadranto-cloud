@@ -1,6 +1,7 @@
+import { type APIRoute } from 'astro'
+
 import { removeOwner } from '@/db/client/projects'
 import { isUUID } from '@/lib/validators'
-import { type APIRoute } from 'astro'
 
 /**
  * Handler function for the DELETE request to remove an owner from a project.

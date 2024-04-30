@@ -1,7 +1,7 @@
-import { lucia } from '@/lib/auth'
-import { getUserByUsername } from '@/db/client/users'
-
 import type { APIContext } from 'astro'
+
+import { getUserByUsername } from '@/db/client/users'
+import { lucia } from '@/lib/auth'
 
 export async function POST(context: APIContext): Promise<Response> {
   const formData = await context.request.formData()

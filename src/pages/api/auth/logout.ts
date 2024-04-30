@@ -1,6 +1,6 @@
-import { lucia } from '@/lib/auth'
-
 import type { APIContext } from 'astro'
+
+import { lucia } from '@/lib/auth'
 
 export async function DELETE(context: APIContext): Promise<Response> {
   if (!context.locals.session) {
