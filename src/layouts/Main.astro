@@ -1,5 +1,57 @@
 ---
-
+import { Package2 } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import Notifications from '@/components/Notifications.vue'
+import UserMenu from '@/components/UserMenu.vue'
+import Search from '@/components/Search.vue'
+import SidebarMenu from '@/components/SidebarMenu.vue'
+import SidebarMenuMobile from '@/components/SidebarMenuMobile.vue'
 ---
 
-<div><slot /></div>
+<div
+  class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
+>
+  <div class="hidden border-r bg-muted/40 md:block">
+    <div class="flex h-full max-h-screen flex-col gap-2">
+      <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+        <a href="/" class="flex items-center gap-2 font-semibold">
+          <Package2 class="h-6 w-6" />
+          <span class="">quadranto.cloud</span>
+        </a>
+        <Notifications />
+      </div>
+      <div class="flex-1">
+        <SidebarMenu />
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-col">
+    <header
+      class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6"
+    >
+      <SidebarMenuMobile client:load />
+      <div class="w-full flex-1">
+        <Search />
+      </div>
+      <UserMenu client:only="vue" />
+    </header>
+    <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+      <div class="flex items-center">
+        <h1 class="text-lg font-semibold md:text-2xl">Projects</h1>
+      </div>
+      <div
+        class="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
+      >
+        <div class="flex flex-col items-center gap-1 text-center">
+          <h3 class="text-2xl font-bold tracking-tight">
+            You have no projects yet.
+          </h3>
+          <p class="text-sm text-muted-foreground">
+            You can start planning as soon as you add a project.
+          </p>
+          <Button class="mt-4"> Add Project </Button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
