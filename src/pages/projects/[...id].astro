@@ -1,7 +1,7 @@
 ---
 import App from '@/layouts/App.astro'
 import Main from '@/layouts/Main.astro'
-import { getProject } from '@/db/client/projects'
+import { listProjects, getProject } from '@/db/client/projects'
 import { listTasksForProject } from '@/db/client/tasks'
 
 const { id } = Astro.params
@@ -13,10 +13,12 @@ const project = await getProject(id, user!.id)
 if (!project) return Astro.redirect('/404')
 
 const allTasks = await listTasksForProject(project.id, user!.id)
+
+const projects = await listProjects(user!.id)
 ---
 
 <App title={project.title}>
-  <Main heading={project.title}>
+  <Main heading={project.title} initialProjects={projects}>
     <p slot="after-heading">{project.description}</p>
     <pre class="whitespace-pre-wrap">{JSON.stringify(project, null, 2)}</pre>
 

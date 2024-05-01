@@ -3,14 +3,18 @@ import { Package2 } from 'lucide-vue-next'
 import Notifications from '@/components/Notifications.vue'
 import UserMenu from '@/components/UserMenu.vue'
 import Search from '@/components/Search.vue'
-import SidebarMenu from '@/components/SidebarMenu.vue'
-import SidebarMenuMobile from '@/components/SidebarMenuMobile.vue'
+import SidebarMenu from '@/components/sidebar/Menu.vue'
+import SidebarMenuMobile from '@/components/sidebar/MobileMenu.vue'
+import type { Project } from '@/db/schema'
 
 interface Props {
   heading: string
+  initialProjects?: Project[]
 }
 
-const { heading } = Astro.props
+const { heading, initialProjects } = Astro.props
+const { url } = Astro.request
+const currentPath = new URL(url).pathname
 ---
 
 <div
@@ -27,7 +31,10 @@ const { heading } = Astro.props
         <Notifications />
       </div>
       <div class="flex-1">
-        <SidebarMenu />
+        <SidebarMenu
+          activePath={currentPath}
+          initialProjects={initialProjects}
+        />
       </div>
     </div>
   </div>
@@ -35,7 +42,11 @@ const { heading } = Astro.props
     <header
       class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6"
     >
-      <SidebarMenuMobile client:load />
+      <SidebarMenuMobile
+        client:load
+        activePath={currentPath}
+        initialProjects={initialProjects}
+      />
       <div class="w-full flex-1">
         <Search />
       </div>

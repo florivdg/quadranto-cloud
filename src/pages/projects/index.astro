@@ -6,12 +6,10 @@ import Main from '@/layouts/Main.astro'
 
 const { user } = Astro.locals
 const projects = await listProjects(user!.id)
-const projectIds = projects.map((project) => project.id)
-console.log(projectIds)
 ---
 
 <App title="Projects">
-  <Main heading="Projects">
+  <Main heading="Projects" initialProjects={projects}>
     <div
       class="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
     >
