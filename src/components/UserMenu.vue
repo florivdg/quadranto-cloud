@@ -9,7 +9,7 @@
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>Settings</DropdownMenuItem>
+      <DropdownMenuItem as="a" href="/settings">Settings</DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="handleLogout">Logout</DropdownMenuItem>
     </DropdownMenuContent>
