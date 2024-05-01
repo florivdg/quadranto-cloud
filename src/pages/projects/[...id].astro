@@ -1,5 +1,6 @@
 ---
 import App from '@/layouts/App.astro'
+import Main from '@/layouts/Main.astro'
 import { getProject } from '@/db/client/projects'
 import { listTasksForProject } from '@/db/client/tasks'
 
@@ -15,11 +16,12 @@ const allTasks = await listTasksForProject(project.id, user!.id)
 ---
 
 <App title={project.title}>
-  <h2 class="text-3xl">Project</h2>
+  <Main heading={project.title}>
+    <p slot="after-heading">{project.description}</p>
+    <pre class="whitespace-pre-wrap">{JSON.stringify(project, null, 2)}</pre>
 
-  <pre class="whitespace-pre-wrap">{JSON.stringify(project, null, 2)}</pre>
+    <h2 class="text-3xl">Tasks</h2>
 
-  <h2 class="text-3xl">Tasks</h2>
-
-  <pre class="whitespace-pre-wrap">{JSON.stringify(allTasks, null, 2)}</pre>
+    <pre class="whitespace-pre-wrap">{JSON.stringify(allTasks, null, 2)}</pre>
+  </Main>
 </App>
