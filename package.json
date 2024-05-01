@@ -22,7 +22,7 @@
     "astro": "4.7.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "drizzle-orm": "^0.30.9",
+    "drizzle-orm": "^0.30.10",
     "lucia": "^3.2.0",
     "lucide-vue-next": "^0.376.0",
     "oslo": "^1.2.0",

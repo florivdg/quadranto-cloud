@@ -32,6 +32,7 @@ export async function listProjects(userId: string): Promise<Project[]> {
     .leftJoin(users, eq(usersToProjects.userId, users.id))
     .leftJoin(projects, eq(usersToProjects.projectId, projects.id))
     .where(eq(users.id, userId))
+    .orderBy(projects.title)
 
   const results = rows.map((row) => row.projects).filter(Boolean) as Project[]
   return results
