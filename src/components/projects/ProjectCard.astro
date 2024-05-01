@@ -1,0 +1,35 @@
+---
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card'
+import type { Project } from '@/db/schema'
+import { Button, buttonVariants } from '@/components/ui/button'
+
+interface Props {
+  project: Project
+}
+
+const { project } = Astro.props
+---
+
+<Card>
+  <CardHeader>
+    <CardTitle>{project.title}</CardTitle>
+    <CardDescription>{project.description}</CardDescription>
+  </CardHeader>
+
+  <CardFooter>
+    <Button asChild>
+      <a
+        href={`/projects/${project.id}`}
+        class:list={[buttonVariants({ variant: 'outline' }), 'w-full']}
+        >Show all tasks</a
+      >
+    </Button>
+  </CardFooter>
+</Card>
