@@ -3,6 +3,7 @@ import App from '@/layouts/App.astro'
 import Main from '@/layouts/Main.astro'
 import { listProjects, getProject } from '@/db/client/projects'
 import { listTasksForProject } from '@/db/client/tasks'
+import Quadrants from '@/components/tasks/Quadrants.vue'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/projects')
@@ -19,11 +20,6 @@ const projects = await listProjects(user!.id)
 
 <App title={project.title}>
   <Main heading={project.title} initialProjects={projects}>
-    <p slot="after-heading">{project.description}</p>
-    <pre class="whitespace-pre-wrap">{JSON.stringify(project, null, 2)}</pre>
-
-    <h2 class="text-3xl">Tasks</h2>
-
-    <pre class="whitespace-pre-wrap">{JSON.stringify(allTasks, null, 2)}</pre>
+    <Quadrants initialTasks={allTasks} />
   </Main>
 </App>
