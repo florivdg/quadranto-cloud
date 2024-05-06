@@ -11,7 +11,8 @@
           :tasks="tasksForPriority(prio)"
           v-for="prio in prios"
           :key="`task-card-${prio}`"
-          @add="(title: string) => handleAddTask(title, prio)"
+          @add="handleAddTask($event, prio)"
+          @toggle-done="handleToggleDone($event)"
         />
       </div>
     </div>
@@ -21,7 +22,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { addTask } from '@/api'
+import { addTask, updateTask } from '@/api'
 import Quadrant from '@/components/tasks/Quadrant.vue'
 import type { NewTask, Priority, Task } from '@/db/schema'
 
@@ -70,10 +71,10 @@ async function handleAddTask(title: string, priority: Priority) {
 
   /// Update local tasks.
   const tempId = self.crypto.randomUUID()
-  tasks.value.push({ ...(taskData as Task), id: tempId })
+  tasks.value.unshift({ ...(taskData as Task), id: tempId })
 
   /// Persist the task to the database.
-  const [task] = await addTask(taskData)
+  const [task, error] = await addTask(taskData)
 
   if (task) {
     /// Update local tasks with the persisted task.
@@ -81,7 +82,37 @@ async function handleAddTask(title: string, priority: Priority) {
   } else {
     /// Remove the task from local tasks when failed to persist.
     tasks.value = tasks.value.filter((t) => t.id !== tempId)
+
     // TODO: Show error message.
+    console.error(error)
+  }
+}
+
+/**
+ * Handle toggling the done state of a task.
+ *
+ * @param task - The task to toggle the done state of.
+ */
+async function handleToggleDone(task: Task) {
+  /// Update local tasks.
+  tasks.value = tasks.value.map((t) =>
+    t.id === task.id ? { ...t, done: !t.done } : t,
+  )
+
+  /// Persist the task to the database.
+  const [updatedTask, error] = await updateTask(task.id, { done: !task.done })
+
+  if (updatedTask) {
+    /// Update local tasks with the persisted task.
+    tasks.value = tasks.value.map((t) => (t.id === task.id ? updatedTask : t))
+  } else {
+    /// Revert the task when failed to persist.
+    tasks.value = tasks.value.map((t) =>
+      t.id === task.id ? { ...t, done: !t.done } : t,
+    )
+
+    /// TODO: Show error message.
+    console.error(error)
   }
 }
 </script>

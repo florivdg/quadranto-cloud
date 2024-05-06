@@ -18,3 +18,25 @@ export async function addTask(body: NewTask): Promise<ApiResponse<Task>> {
     return [null, apiError]
   }
 }
+
+/**
+ * Updates an existing task.
+ * @param id - The ID of the task to update.
+ * @param body - The data to update the task with.
+ * @returns A promise that resolves to an array containing the updated task and any error that occurred during the operation.
+ */
+export async function updateTask(
+  id: string,
+  body: Partial<Task>,
+): Promise<ApiResponse<Task>> {
+  try {
+    const task = await backendClient<Task>(`tasks/${id}`, {
+      method: 'PUT',
+      body,
+    })
+    return [task, null]
+  } catch (error) {
+    const apiError = ApiError.fromFetchError(error as FetchError)
+    return [null, apiError]
+  }
+}

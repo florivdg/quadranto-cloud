@@ -6,9 +6,12 @@
     <CardContent class="flex flex-1 flex-col overflow-hidden p-0">
       <TaskInput @add="handleAddTask" />
       <ul class="overflow-y-auto">
-        <li v-for="task in tasks" class="px-3 py-1.5 odd:bg-muted/40">
-          {{ task.title }}
-        </li>
+        <TaskCell
+          v-for="task in tasks"
+          :task="task"
+          :key="task.id"
+          @toggle-done="$emit('toggleDone', $event)"
+        />
       </ul>
     </CardContent>
   </Card>
@@ -17,6 +20,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import TaskCell from '@/components/tasks/TaskCell.vue'
 import TaskInput from '@/components/tasks/TaskInput.vue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { Priority, Task } from '@/db/schema'
@@ -34,6 +38,7 @@ const props = defineProps<{
  */
 const emit = defineEmits<{
   add: [title: string]
+  toggleDone: [task: Task]
 }>()
 
 /**

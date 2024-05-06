@@ -1,4 +1,4 @@
 import { backendClient, type ApiResponse } from './client'
-import { addTask } from './tasks'
+import { addTask, updateTask } from './tasks'
 
-export { backendClient, type ApiResponse, addTask }
+export { backendClient, type ApiResponse, addTask, updateTask }

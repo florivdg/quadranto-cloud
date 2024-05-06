@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { eq, desc } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { isOwner } from '@/db/client/projects'
@@ -17,7 +17,11 @@ export async function listTasksForProject(
   // * Check if the user is an owner of the project
   if (!(await isOwner(projectId, userId))) return []
 
-  return await db.select().from(tasks).where(eq(tasks.projectId, projectId))
+  return await db
+    .select()
+    .from(tasks)
+    .where(eq(tasks.projectId, projectId))
+    .orderBy(desc(tasks.createdAt))
 }
 
 /**
