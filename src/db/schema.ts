@@ -191,5 +191,6 @@ export type Project = typeof projects.$inferSelect
 export type NewProject = typeof projects.$inferInsert
 export type Task = typeof tasks.$inferSelect
 export type NewTask = typeof tasks.$inferInsert
+export type Priority = Task['priority']
 export type UserToProject = typeof usersToProjects.$inferSelect
 export type NewUserToProject = typeof usersToProjects.$inferInsert

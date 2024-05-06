@@ -1,24 +1,44 @@
 <template>
-  <div :class="[`prio-${priority}`, classes]" class="rounded-lg p-4">
-    <input
-      type="text"
-      class="tasks w-full rounded-md border border-gray-300 px-2 py-3 text-black"
-      placeholder="Add a task..."
-    />
-  </div>
+  <Card>
+    <CardHeader>
+      <CardTitle>{{ title }}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <ul>
+        <li v-for="task in tasks">{{ task.title }}</li>
+      </ul>
+    </CardContent>
+    <CardFooter></CardFooter>
+  </Card>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from '@/components/ui/card'
+import type { Priority, Task } from '@/db/schema'
+
 const props = defineProps<{
-  priority: 1 | 2 | 3 | 4
+  priority: Priority
+  tasks: Task[]
 }>()
 
-const classes = computed(() => ({
-  'bg-lime-100': props.priority === 1,
-  'bg-sky-100': props.priority === 2,
-  'bg-yellow-100': props.priority === 3,
-  'bg-red-100': props.priority === 4,
-}))
+const title = computed(() => {
+  switch (props.priority) {
+    case 'urgent':
+      return 'Urgent and Important 🔥'
+    case 'high':
+      return 'Important, but not Urgent ⏰'
+    case 'medium':
+      return 'Urgent, but not Important ⚡'
+    case 'low':
+      return 'Not Important, not Urgent 💤'
+  }
+})
 </script>

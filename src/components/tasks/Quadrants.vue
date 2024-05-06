@@ -1,8 +1,9 @@
 <template>
   <div class="h-full">
-    <div id="quadrants" class="h-full">
+    <div id="quadrants" class="grid h-full grid-cols-2 grid-rows-2 gap-4">
       <Quadrant
         :priority="prio"
+        :tasks="tasksForPriority(prio)"
         v-for="prio in prios"
         :key="`task-card-${prio}`"
       />
@@ -12,70 +13,15 @@
 
 <script setup lang="ts">
 import Quadrant from '@/components/tasks/Quadrant.vue'
+import type { Priority, Task } from '@/db/schema'
 
-const prios = [1, 2, 3, 4] as const
-</script>
+const prios: Priority[] = ['urgent', 'high', 'medium', 'low']
 
-<style>
-#quadrants {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+const props = defineProps<{
+  initialTasks: Task[]
+}>()
 
-  & > div {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-
-  &:has(:focus) {
-    .prio-1 {
-      &:has(:focus) {
-        grid-column: 1 / -2;
-        grid-row: 1 / -2;
-      }
-
-      &:not(:has(:focus)) {
-        grid-column: 1 / 2;
-        grid-row: 1 / 4;
-      }
-    }
-
-    .prio-2 {
-      &:has(:focus) {
-        grid-column: 2 / -1;
-        grid-row: 1 / -2;
-      }
-
-      &:not(:has(:focus)) {
-        grid-column: -2 / -1;
-        grid-row: 1 / 4;
-      }
-    }
-
-    .prio-3 {
-      &:has(:focus) {
-        grid-column: 1 / -2;
-        grid-row: -1 / 2;
-      }
-
-      &:not(:has(:focus)) {
-        grid-column: 1 / 2;
-        grid-row: 2 / -1;
-      }
-    }
-
-    .prio-4 {
-      &:has(:focus) {
-        grid-column: 2 / -1;
-        grid-row: -1 / 2;
-      }
-
-      &:not(:has(:focus)) {
-        grid-column: -2 / -1;
-        grid-row: 2 / -1;
-      }
-    }
-  }
+function tasksForPriority(priority: Priority) {
+  return props.initialTasks.filter((task) => task.priority === priority)
 }
-</style>
+</script>
