@@ -19,7 +19,7 @@ const projects = await listProjects(user!.id)
 ---
 
 <App title={project.title}>
-  <Main heading={project.title} initialProjects={projects}>
+  <Main initialProjects={projects} addPadding={false}>
     <Quadrants initialTasks={allTasks} />
   </Main>
 </App>
