@@ -20,6 +20,6 @@ const projects = await listProjects(user!.id)
 
 <App title={project.title}>
   <Main initialProjects={projects} addPadding={false}>
-    <Quadrants initialTasks={allTasks} />
+    <Quadrants initialTasks={allTasks} client:load />
   </Main>
 </App>
