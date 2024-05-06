@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
   pgEnum,
+  boolean,
   uniqueIndex,
   primaryKey,
   index,
@@ -162,6 +163,7 @@ export const tasks = pgTable('tasks', {
   notes: text('description'),
   priority: taskPriorityEnum('priority').default('low').notNull(),
   dueDate: timestamp('due_date'),
+  done: boolean('done').default(false),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at'),
   projectId: uuid('project_id')
