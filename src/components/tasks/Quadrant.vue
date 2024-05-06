@@ -30,6 +30,13 @@ const props = defineProps<{
 }>()
 
 /**
+ * Emits.
+ */
+const emit = defineEmits<{
+  add: [title: string]
+}>()
+
+/**
  * Compute quadrant title based on priority.
  */
 const title = computed(() => {
@@ -50,6 +57,6 @@ const title = computed(() => {
  * @param title The user input.
  */
 async function handleAddTask(title: string) {
-  console.log(title)
+  emit('add', title)
 }
 </script>
