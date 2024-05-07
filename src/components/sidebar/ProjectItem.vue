@@ -1,7 +1,7 @@
 <template>
   <a
     :href="href"
-    class="flex items-center gap-3 rounded-lg ml-3 px-3 py-2 transition-all hover:text-primary"
+    class="ml-3 flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
     :class="[isActive ? 'bg-muted text-primary' : 'text-muted-foreground']"
   >
     <LayoutGrid class="h-4 w-4" />

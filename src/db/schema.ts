@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
   pgEnum,
+  boolean,
   uniqueIndex,
   primaryKey,
   index,
@@ -162,6 +163,7 @@ export const tasks = pgTable('tasks', {
   notes: text('description'),
   priority: taskPriorityEnum('priority').default('low').notNull(),
   dueDate: timestamp('due_date'),
+  done: boolean('done').default(false),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at'),
   projectId: uuid('project_id')
@@ -191,5 +193,6 @@ export type Project = typeof projects.$inferSelect
 export type NewProject = typeof projects.$inferInsert
 export type Task = typeof tasks.$inferSelect
 export type NewTask = typeof tasks.$inferInsert
+export type Priority = Task['priority']
 export type UserToProject = typeof usersToProjects.$inferSelect
 export type NewUserToProject = typeof usersToProjects.$inferInsert

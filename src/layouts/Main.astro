@@ -8,11 +8,16 @@ import SidebarMenuMobile from '@/components/sidebar/MobileMenu.vue'
 import type { Project } from '@/db/schema'
 
 interface Props {
-  heading: string
+  heading?: string
+  scrollable?: boolean
+  addPadding?: boolean
   initialProjects?: Project[]
 }
 
-const { heading, initialProjects } = Astro.props
+const { heading, scrollable, initialProjects } = Astro.props
+let { addPadding } = Astro.props
+if (typeof addPadding === 'undefined') addPadding = true
+
 const { url } = Astro.request
 const currentPath = new URL(url).pathname
 ---
@@ -38,26 +43,38 @@ const currentPath = new URL(url).pathname
       </div>
     </div>
   </div>
-  <div class="flex flex-col">
-    <header
-      class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6"
-    >
-      <SidebarMenuMobile
-        client:load
-        activePath={currentPath}
-        initialProjects={initialProjects}
-      />
-      <div class="w-full flex-1">
-        <Search />
-      </div>
-      <UserMenu client:load />
-    </header>
-    <main class="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <div>
-        <h1 class="text-lg font-semibold md:text-2xl">{heading}</h1>
-        <slot name="after-heading" />
-      </div>
-      <slot />
-    </main>
+  <div class="h-full max-h-screen">
+    <div class="flex h-full max-h-screen flex-col">
+      <header
+        class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6"
+      >
+        <SidebarMenuMobile
+          client:load
+          activePath={currentPath}
+          initialProjects={initialProjects}
+        />
+        <div class="w-full flex-1">
+          <Search />
+        </div>
+        <UserMenu client:load />
+      </header>
+      <main
+        class:list={[
+          'flex-1',
+          addPadding ? 'p-4 lg:p-6' : '',
+          scrollable ? 'overflow-y-auto' : 'overflow-hidden',
+        ]}
+      >
+        {
+          heading ? (
+            <div>
+              <h1 class="mb-2 text-lg font-semibold md:text-2xl">{heading}</h1>
+              <slot name="after-heading" />
+            </div>
+          ) : undefined
+        }
+        <slot />
+      </main>
+    </div>
   </div>
 </div>
