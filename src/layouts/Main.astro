@@ -39,6 +39,7 @@ const currentPath = new URL(url).pathname
         <SidebarMenu
           activePath={currentPath}
           initialProjects={initialProjects}
+          client:load
         />
       </div>
     </div>

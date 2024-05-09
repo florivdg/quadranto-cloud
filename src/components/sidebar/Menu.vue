@@ -18,6 +18,8 @@
       Projects
     </SidebarMenuItem>
 
+    <SidebarProjectItemAdd />
+
     <SidebarProjectItem
       v-for="project in initialProjects"
       :href="`/projects/${project.id}`"
@@ -40,6 +42,7 @@ import { Home, FolderOpen, FolderClosed, Settings } from 'lucide-vue-next'
 
 import SidebarMenuItem from '@/components/sidebar/MenuItem.vue'
 import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
+import SidebarProjectItemAdd from '@/components/sidebar/ProjectItemAdd.vue'
 import type { Project } from '@/db/schema'
 
 defineProps<{
