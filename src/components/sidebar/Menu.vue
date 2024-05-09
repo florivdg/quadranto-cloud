@@ -18,7 +18,7 @@
       Projects
     </SidebarMenuItem>
 
-    <SidebarProjectItemAdd />
+    <slot name="new-project" v-if="initialProjects?.length" />
 
     <SidebarProjectItem
       v-for="project in initialProjects"
@@ -42,7 +42,6 @@ import { Home, FolderOpen, FolderClosed, Settings } from 'lucide-vue-next'
 
 import SidebarMenuItem from '@/components/sidebar/MenuItem.vue'
 import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
-import SidebarProjectItemAdd from '@/components/sidebar/ProjectItemAdd.vue'
 import type { Project } from '@/db/schema'
 
 defineProps<{

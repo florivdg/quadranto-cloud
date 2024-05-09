@@ -32,7 +32,7 @@
           Projects
         </SidebarMenuMobileItem>
 
-        <SidebarProjectItemAdd />
+        <slot name="new-project" v-if="initialProjects?.length" />
 
         <SidebarProjectItem
           v-for="project in initialProjects"
@@ -68,7 +68,6 @@ import {
 
 import SidebarMenuMobileItem from '@/components/sidebar/MobileMenuItem.vue'
 import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
-import SidebarProjectItemAdd from '@/components/sidebar/ProjectItemAdd.vue'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import type { Project } from '@/db/schema'
