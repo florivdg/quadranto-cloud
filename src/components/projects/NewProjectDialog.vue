@@ -5,8 +5,8 @@
     </DialogTrigger>
     <DialogContent class="sm:max-w-[575px]">
       <DialogHeader>
-        <DialogTitle>Create Project</DialogTitle>
-        <DialogDescription>
+        <DialogTitle class="mb-4">Create a New Project</DialogTitle>
+        <DialogDescription class="sr-only">
           Create a new project. Fill in the form below to get started.
         </DialogDescription>
       </DialogHeader>
