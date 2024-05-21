@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # self-signed certificate
 .certs/
+
+# docker secrets
+db_password.secret

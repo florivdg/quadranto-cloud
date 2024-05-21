@@ -9,7 +9,11 @@ export default {
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DB_URL!,
+    user: process.env.POSTGRES_USER!,
+    password: process.env.POSTGRES_PASSWORD!,
+    database: process.env.POSTGRES_DB!,
+    host: process.env.POSTGRES_HOST!,
+    port: parseInt(process.env.POSTGRES_PORT!),
   },
   verbose: true,
   strict: true,

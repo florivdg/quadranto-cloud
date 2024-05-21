@@ -11,6 +11,11 @@ FROM oven/bun:1-alpine
 
 WORKDIR /app
 
+COPY package.json .
+COPY bun.lockb .
+
+RUN bun install --production 
+
 COPY --from=builder /app/dist .
 
 ENV HOST=0.0.0.0

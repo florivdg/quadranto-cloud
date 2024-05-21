@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: quadranto
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: quadranto
+    secrets:
+      - db_password
+
+  app:
+    image: quadranto-cloud:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - 4321:4321
+    environment:
+      POSTGRES_USER: quadranto
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: quadranto
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    secrets:
+      - db_password
+
+secrets:
+   db_password:
+     file: db_password.secret
