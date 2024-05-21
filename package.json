@@ -8,8 +8,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "db:generate": "drizzle-kit generate:pg",
-    "db:push": "drizzle-kit push:pg",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
     "db:migrate": "bun run ./src/db/migrate.ts"
   },
   "dependencies": {
