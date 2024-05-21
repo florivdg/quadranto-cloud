@@ -14,13 +14,6 @@ export default defineConfig({
     optimizeDeps: {
       exclude: ['olso'],
     },
-    server: {
-      host: 'quadranto.flori.local',
-      https: {
-        key: './.certs/key.pem',
-        cert: './.certs/cert.pem',
-      },
-    },
   },
   experimental: {
     security: {
