@@ -1,7 +1,7 @@
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button variant="outline" class="my-1.5">Create Project...</Button>
+      <Button :variant="variant" class="my-1.5">Create Project...</Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[575px]">
       <DialogHeader>
@@ -19,6 +19,7 @@
 import { addProject } from '@/api/project'
 import ProjectForm from '@/components/projects/ProjectForm.vue'
 import { Button } from '@/components/ui/button'
+import { type ButtonVariants } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -28,6 +29,13 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import type { NewProject } from '@/db/schema'
+
+withDefaults(
+  defineProps<{
+    variant?: ButtonVariants['variant']
+  }>(),
+  { variant: 'outline' },
+)
 
 async function handleCreateProject(payload: NewProject) {
   const [project, error] = await addProject(payload)
