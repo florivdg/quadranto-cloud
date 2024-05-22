@@ -10,7 +10,7 @@
     "astro": "astro",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:migrate": "bun run ./src/db/migrate.ts"
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@astrojs/check": "0.7.0",
