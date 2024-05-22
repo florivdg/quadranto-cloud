@@ -11,6 +11,7 @@ import type { Project } from '@/db/schema'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { CalendarIcon } from 'lucide-vue-next'
 import { formatDate } from '@/lib/formatters'
+import { acceptLanguage } from '@/lib/utils'
 
 interface Props {
   project: Project
@@ -18,7 +19,7 @@ interface Props {
 
 const { project } = Astro.props
 const headers = Astro.request.headers
-const locale = headers.get('accept-language')?.split(',').at(0)
+const locale = acceptLanguage(headers)
 ---
 
 <Card>
@@ -30,7 +31,7 @@ const locale = headers.get('accept-language')?.split(',').at(0)
   <CardContent>
     <div class="flex space-x-4 text-sm text-muted-foreground">
       <div class="flex items-center">
-        <CalendarIcon class="mr-1 h-4 w-4 text-orange-600" />
+        <CalendarIcon class="mr-1 h-4 w-4" />
         {
           project.dueDate ? (
             <time datetime={project.dueDate}>
