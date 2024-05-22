@@ -10,7 +10,7 @@ services:
       - db_password
 
   app:
-    image: quadranto-cloud:latest
+    image: florivdg/quadranto:latest
     restart: unless-stopped
     depends_on:
       - postgres
