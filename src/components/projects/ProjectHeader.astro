@@ -1,0 +1,45 @@
+---
+import { type Project } from '@/db/schema'
+import ProjectHeaderActions from './ProjectHeaderActions.vue'
+import { CalendarIcon } from 'lucide-vue-next'
+import { formatDate } from '@/lib/formatters'
+import { acceptLanguage } from '@/lib/utils'
+
+interface Props {
+  project: Project
+}
+
+const { project } = Astro.props
+const { headers } = Astro.request
+const locale = acceptLanguage(headers)
+---
+
+<div class="flex justify-between gap-4 px-4 pt-2 lg:px-6 lg:pt-3">
+  <div>
+    <div class="flex items-center">
+      <h1 class="text-lg font-semibold md:text-2xl">
+        {project.title}
+      </h1>
+      {
+        project.dueDate ? (
+          <div class="ml-2.5 flex items-center text-sm text-muted-foreground">
+            <CalendarIcon class="mr-1 h-4 w-4 text-muted-foreground" />
+            {project.dueDate ? (
+              <time datetime={project.dueDate}>
+                {formatDate(project.dueDate, locale)}
+              </time>
+            ) : (
+              <span class="italic">No due date</span>
+            )}
+          </div>
+        ) : undefined
+      }
+    </div>
+    <p class="line-clamp-3 text-xl text-muted-foreground lg:line-clamp-2">
+      {project.description}
+    </p>
+  </div>
+  <div>
+    <ProjectHeaderActions client:load />
+  </div>
+</div>

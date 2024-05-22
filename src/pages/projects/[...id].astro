@@ -4,6 +4,7 @@ import Main from '@/layouts/Main.astro'
 import { listProjects, getProject } from '@/db/client/projects'
 import { listTasksForProject } from '@/db/client/tasks'
 import Quadrants from '@/components/tasks/Quadrants.vue'
+import ProjectHeader from '@/components/projects/ProjectHeader.astro'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/projects')
@@ -20,6 +21,7 @@ const projects = await listProjects(user!.id)
 
 <App title={project.title}>
   <Main initialProjects={projects} addPadding={false}>
+    <ProjectHeader project={project} />
     <Quadrants initialTasks={allTasks} projectId={id} client:load />
   </Main>
 </App>
