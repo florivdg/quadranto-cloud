@@ -13,7 +13,7 @@ let DB_PASSWORD = Bun.env.POSTGRES_PASSWORD
 if (Bun.env.POSTGRES_PASSWORD_FILE) {
   /// When set via Docker secrets, read the password from a file
   const pw = await Bun.file(Bun.env.POSTGRES_PASSWORD_FILE).text()
-  DB_PASSWORD = pw
+  DB_PASSWORD = pw.trim()
 }
 
 const client = postgres({
