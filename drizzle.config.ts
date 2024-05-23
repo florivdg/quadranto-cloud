@@ -1,8 +1,16 @@
 import { config } from 'dotenv'
 import type { Config } from 'drizzle-kit'
+import { readFileSync } from 'node:fs'
 
-/// Load environment variables
-config({ path: './.env' })
+let DB_PASSWORD = process.env.POSTGRES_PASSWORD
+
+if (process.env.NODE_ENV !== 'production') {
+  /// Load environment variables
+  config({ path: './.env' })
+} else {
+  /// Set DB_PASSWORD
+  DB_PASSWORD = readFileSync(process.env.POSTGRES_PASSWORD_FILE!, 'utf-8')
+}
 
 export default {
   schema: './src/db/schema.ts',
@@ -10,7 +18,7 @@ export default {
   dialect: 'postgresql',
   dbCredentials: {
     user: process.env.POSTGRES_USER!,
-    password: process.env.POSTGRES_PASSWORD!,
+    password: DB_PASSWORD,
     database: process.env.POSTGRES_DB!,
     host: process.env.POSTGRES_HOST!,
     port: parseInt(process.env.POSTGRES_PORT!),
