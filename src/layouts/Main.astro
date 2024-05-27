@@ -5,6 +5,7 @@ import UserMenu from '@/components/UserMenu.vue'
 import Search from '@/components/Search.vue'
 import SidebarMenu from '@/components/sidebar/Menu.vue'
 import SidebarMenuMobile from '@/components/sidebar/MobileMenu.vue'
+import NewProjectDialog from '@/components/projects/NewProjectDialog.vue'
 import type { Project } from '@/db/schema'
 
 interface Props {
@@ -36,10 +37,9 @@ const currentPath = new URL(url).pathname
         <Notifications />
       </div>
       <div class="flex-1">
-        <SidebarMenu
-          activePath={currentPath}
-          initialProjects={initialProjects}
-        />
+        <SidebarMenu activePath={currentPath} initialProjects={initialProjects}>
+          <NewProjectDialog slot="new-project" client:load />
+        </SidebarMenu>
       </div>
     </div>
   </div>
@@ -49,10 +49,12 @@ const currentPath = new URL(url).pathname
         class="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6"
       >
         <SidebarMenuMobile
-          client:load
+          client:idle
           activePath={currentPath}
           initialProjects={initialProjects}
-        />
+        >
+          <NewProjectDialog slot="new-project" client:load />
+        </SidebarMenuMobile>
         <div class="w-full flex-1">
           <Search />
         </div>

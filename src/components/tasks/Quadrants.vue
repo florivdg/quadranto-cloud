@@ -1,8 +1,9 @@
 <template>
   <div class="h-full overflow-hidden @container/project">
     <div
-      class="h-full overflow-y-auto p-4 @2xl/project:h-full @2xl/project:overflow-hidden lg:p-6"
+      class="h-full overflow-y-auto p-4 @2xl/project:flex @2xl/project:h-full @2xl/project:flex-col @2xl/project:overflow-hidden lg:p-6"
     >
+      <ProjectHeader :project="project" :locale="locale" />
       <div
         class="grid grid-cols-1 gap-4 @2xl/project:h-full @2xl/project:grid-cols-2 @2xl/project:grid-rows-2 @2xl/project:overflow-hidden"
       >
@@ -23,8 +24,9 @@
 import { ref } from 'vue'
 
 import { addTask, updateTask } from '@/api'
+import ProjectHeader from '@/components/projects/ProjectHeader.vue'
 import Quadrant from '@/components/tasks/Quadrant.vue'
-import type { NewTask, Priority, Task } from '@/db/schema'
+import type { NewTask, Priority, Project, Task } from '@/db/schema'
 
 /**
  * Available priorities.
@@ -36,7 +38,8 @@ const prios: Priority[] = ['urgent', 'high', 'medium', 'low']
  */
 const props = defineProps<{
   initialTasks: Task[]
-  projectId: string
+  project: Project
+  locale?: string
 }>()
 
 /**
@@ -66,7 +69,7 @@ async function handleAddTask(title: string, priority: Priority) {
   const taskData: NewTask = {
     title,
     priority,
-    projectId: props.projectId,
+    projectId: props.project.id,
   }
 
   /// Update local tasks.

@@ -32,6 +32,16 @@
           Projects
         </SidebarMenuMobileItem>
 
+        <slot name="new-project" v-if="initialProjects?.length" />
+
+        <SidebarProjectItem
+          v-for="project in initialProjects"
+          :href="`/projects/${project.id}`"
+          :is-active="activePath.includes(project.id)"
+          :key="project.id"
+          >{{ project.title }}</SidebarProjectItem
+        >
+
         <SidebarMenuMobileItem
           href="/settings"
           :is-active="activePath === '/settings'"
@@ -57,6 +67,7 @@ import {
 } from 'lucide-vue-next'
 
 import SidebarMenuMobileItem from '@/components/sidebar/MobileMenuItem.vue'
+import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import type { Project } from '@/db/schema'

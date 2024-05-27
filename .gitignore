@@ -23,3 +23,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# self-signed certificate
+.certs/
+
+# docker secrets
+db_password.secret

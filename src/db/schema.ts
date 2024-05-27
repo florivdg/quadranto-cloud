@@ -12,6 +12,7 @@ import {
   primaryKey,
   index,
 } from 'drizzle-orm/pg-core'
+import { createInsertSchema } from 'drizzle-zod'
 
 /**
  * Define the `users` schema for the database.
@@ -101,6 +102,11 @@ export const projects = pgTable('projects', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at'),
 })
+
+/**
+ * Zod schema for inserting a project - used for validation.
+ */
+export const insertProjectSchema = createInsertSchema(projects)
 
 /**
  * Define the relations for the `projects` schema.

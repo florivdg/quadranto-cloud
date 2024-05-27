@@ -18,6 +18,8 @@
       Projects
     </SidebarMenuItem>
 
+    <slot name="new-project" v-if="initialProjects?.length" />
+
     <SidebarProjectItem
       v-for="project in initialProjects"
       :href="`/projects/${project.id}`"
