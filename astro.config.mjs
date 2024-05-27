@@ -15,11 +15,7 @@ export default defineConfig({
       exclude: ['olso'],
     },
   },
-  experimental: {
-    security: {
-      csrfProtection: {
-        origin: true,
-      },
-    },
+  security: {
+    checkOrigin: true,
   },
 })
