@@ -1,11 +1,11 @@
 import type { Config } from 'drizzle-kit'
 import { readFileSync } from 'node:fs'
 
-let DB_PASSWORD = Bun.env.POSTGRES_PASSWORD
+let DB_PASSWORD = process.env.POSTGRES_PASSWORD
 
-if (Bun.env.POSTGRES_PASSWORD_FILE) {
+if (process.env.POSTGRES_PASSWORD_FILE) {
   /// Set DB_PASSWORD
-  DB_PASSWORD = readFileSync(Bun.env.POSTGRES_PASSWORD_FILE, 'utf8').trim()
+  DB_PASSWORD = readFileSync(process.env.POSTGRES_PASSWORD_FILE, 'utf8').trim()
 }
 
 export default {
@@ -13,11 +13,11 @@ export default {
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    user: Bun.env.POSTGRES_USER!,
+    user: process.env.POSTGRES_USER!,
     password: DB_PASSWORD,
-    database: Bun.env.POSTGRES_DB!,
-    host: Bun.env.POSTGRES_HOST!,
-    port: parseInt(Bun.env.POSTGRES_PORT!),
+    database: process.env.POSTGRES_DB!,
+    host: process.env.POSTGRES_HOST!,
+    port: parseInt(process.env.POSTGRES_PORT!),
   },
   verbose: true,
   strict: true,
