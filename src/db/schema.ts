@@ -174,7 +174,7 @@ export const tasks = pgTable('tasks', {
   updatedAt: timestamp('updated_at'),
   projectId: uuid('project_id')
     .notNull()
-    .references(() => projects.id),
+    .references(() => projects.id, { onDelete: 'cascade' }),
   ownerId: uuid('owner_id').references(() => users.id),
 })
 
