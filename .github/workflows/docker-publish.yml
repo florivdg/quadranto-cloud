@@ -33,4 +33,5 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/${{ github.repository }}/quadranto:${{ steps.extract_tag.outputs.tag }}
