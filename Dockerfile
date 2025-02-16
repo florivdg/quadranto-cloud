@@ -1,5 +1,7 @@
 FROM oven/bun:1-alpine
 
+LABEL org.opencontainers.image.description="Organize your projects with the Eisenhower matrix."
+
 WORKDIR /app
 
 COPY . .
