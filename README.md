@@ -28,21 +28,15 @@ See [Drizzle Docs](https://orm.drizzle.team/docs/kit-overview)
 
 ## Upgrading in Production
 
-1. Build new Docker image:
+1. Pull latest docker image:
 
 ```shell
-docker build --platform linux/arm64 -t florivdg/quadranto:{new-tag} .
+docker pull ghcr.io/quadranto/quadranto.cloud:latest
+# or
+docker compose pull app
 ```
 
-2. Push new Docker image:
-
-```shell
-docker push florivdg/quadranto:{new-tag}
-```
-
-3. Update the image in the docker-compose.yaml file on production server.
-
-4. Run Drizzle migrations within production container, if needed:
+2. Run Drizzle migrations within production container, if needed:
 
 ```shell
 bunx drizzle-kit migrate

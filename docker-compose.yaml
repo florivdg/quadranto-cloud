@@ -12,7 +12,7 @@ services:
       - db_password
 
   app:
-    image: florivdg/quadranto:latest
+    image: ghcr.io/florivdg/quadranto-cloud/quadranto:latest
     restart: unless-stopped
     depends_on:
       - postgres
