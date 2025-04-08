@@ -52,11 +52,7 @@ export const sessions = pgTable(
     }).notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
   },
-  (table) => {
-    return {
-      sessionUserIdIdx: index('session_user_id_idx').on(table.userId),
-    }
-  },
+  (table) => [index('session_user_id_idx').on(table.userId)],
 )
 
 /**
@@ -73,12 +69,10 @@ export const profiles = pgTable(
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at'),
   },
-  (table) => {
-    return {
-      userIdIdx: uniqueIndex('id_idx').on(table.id),
-      emailIdx: uniqueIndex('email_idx').on(table.email),
-    }
-  },
+  (table) => [
+    uniqueIndex('id_idx').on(table.id),
+    uniqueIndex('email_idx').on(table.email),
+  ],
 )
 
 /**
@@ -128,9 +122,7 @@ export const usersToProjects = pgTable(
       .notNull()
       .references(() => projects.id, { onDelete: 'cascade' }),
   },
-  (t) => ({
-    pk: primaryKey({ columns: [t.userId, t.projectId] }),
-  }),
+  (t) => [primaryKey({ columns: [t.userId, t.projectId] })],
 )
 
 /**
