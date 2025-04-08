@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import { type HTMLAttributes, computed } from 'vue'
-import { CalendarCellTrigger, type CalendarCellTriggerProps, useForwardProps } from 'radix-vue'
-import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { buttonVariants } from '@/components/ui/button'
+import { CalendarCellTrigger, type CalendarCellTriggerProps, useForwardProps } from 'reka-ui'
+import { computed, type HTMLAttributes } from 'vue'
 
-const props = defineProps<CalendarCellTriggerProps & { class?: HTMLAttributes['class'] }>()
+const props = withDefaults(defineProps<CalendarCellTriggerProps & { class?: HTMLAttributes['class'] }>(), {
+  as: 'button',
+})
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props
@@ -17,9 +19,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 
 <template>
   <CalendarCellTrigger
+    data-slot="calendar-cell-trigger"
     :class="cn(
       buttonVariants({ variant: 'ghost' }),
-      'h-9 w-9 p-0 font-normal',
+      'size-8 p-0 font-normal aria-selected:opacity-100 cursor-default',
       '[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground',
       // Selected
       'data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:opacity-100 data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground',
@@ -28,7 +31,7 @@ const forwardedProps = useForwardProps(delegatedProps)
       // Unavailable
       'data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through',
       // Outside months
-      'data-[outside-month]:pointer-events-none data-[outside-month]:text-muted-foreground data-[outside-month]:opacity-50 [&[data-outside-month][data-selected]]:bg-accent/50 [&[data-outside-month][data-selected]]:text-muted-foreground [&[data-outside-month][data-selected]]:opacity-30',
+      'data-[outside-view]:text-muted-foreground',
       props.class,
     )"
     v-bind="forwardedProps"
