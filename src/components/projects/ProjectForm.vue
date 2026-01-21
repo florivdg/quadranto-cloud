@@ -48,7 +48,7 @@
                     ? df.format(toDate(dueDateValue))
                     : 'Pick a due date'
                 }}</span>
-                <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />
+                <CalendarIcon class="ms-auto size-4 opacity-50" />
               </Button>
               <input hidden />
             </FormControl>
@@ -89,7 +89,7 @@ import {
 } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import { toDate } from 'radix-vue/date'
+import { toDate } from 'reka-ui/date'
 import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 

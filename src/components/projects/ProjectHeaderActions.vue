@@ -8,11 +8,11 @@
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem>
-        <Pencil class="mr-2 h-4 w-4" />
+        <Pencil class="mr-2 size-4" />
         <span>Edit</span>
       </DropdownMenuItem>
       <DropdownMenuItem>
-        <Trash2 class="mr-2 h-4 w-4" />
+        <Trash2 class="mr-2 size-4" />
         <span>Delete</span>
       </DropdownMenuItem>
     </DropdownMenuContent>

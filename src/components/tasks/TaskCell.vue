@@ -1,6 +1,6 @@
 <template>
   <li
-    class="group flex items-center justify-between gap-2 px-3 py-1.5 odd:bg-muted/40"
+    class="group odd:bg-muted/40 flex items-center justify-between gap-2 px-3 py-1.5"
   >
     <span :class="[task.done ? 'line-through opacity-30' : '']">{{
       task.title

@@ -29,9 +29,9 @@ const locale = acceptLanguage(headers)
   </CardHeader>
 
   <CardContent>
-    <div class="flex space-x-4 text-sm text-muted-foreground">
+    <div class="text-muted-foreground flex space-x-4 text-sm">
       <div class="flex items-center">
-        <CalendarIcon class="mr-1 h-4 w-4" />
+        <CalendarIcon class="mr-1 size-4" />
         {
           project.dueDate ? (
             <time datetime={project.dueDate}>

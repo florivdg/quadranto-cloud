@@ -1,7 +1,7 @@
 <template>
-  <div class="h-full overflow-hidden @container/project">
+  <div class="@container/project h-full overflow-hidden">
     <div
-      class="h-full overflow-y-auto p-4 @2xl/project:flex @2xl/project:h-full @2xl/project:flex-col @2xl/project:overflow-hidden lg:p-6"
+      class="h-full overflow-y-auto p-4 lg:p-6 @2xl/project:flex @2xl/project:h-full @2xl/project:flex-col @2xl/project:overflow-hidden"
     >
       <ProjectHeader :project="project" :locale="locale" />
       <div

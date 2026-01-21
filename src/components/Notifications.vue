@@ -1,6 +1,6 @@
 <template>
   <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
-    <Bell class="h-4 w-4" />
+    <Bell class="size-4" />
     <span class="sr-only">Toggle notifications</span>
   </Button>
 </template>

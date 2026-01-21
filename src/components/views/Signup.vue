@@ -1,5 +1,5 @@
 <template>
-  <Card class="mx-auto min-w-96 max-w-sm">
+  <Card class="mx-auto max-w-sm min-w-96">
     <form @submit.prevent="handleSignup">
       <CardHeader>
         <CardTitle class="text-2xl">Sign Up</CardTitle>
@@ -9,7 +9,7 @@
       </CardHeader>
       <CardContent>
         <Alert v-if="errorMessage" variant="destructive" class="-mt-2 mb-4">
-          <AlertCircle class="h-4 w-4" />
+          <AlertCircle class="size-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
             {{ errorMessage }}

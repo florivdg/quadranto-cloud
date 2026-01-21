@@ -1,3 +1,6 @@
+<!-- @fallthroughAttributes true -->
+<!-- @strictTemplates true -->
+
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 
@@ -7,10 +10,10 @@ const props = defineProps<{ class?: HTMLAttributes['class'] }>()
 </script>
 
 <template>
-  <div
-    data-slot="sheet-footer"
-    :class="cn('mt-auto flex flex-col gap-2 p-4', props.class)"
+  <optgroup
+    data-slot="native-select-optgroup"
+    :class="cn('bg-popover text-popover-foreground', props.class)"
   >
     <slot />
-  </div>
+  </optgroup>
 </template>

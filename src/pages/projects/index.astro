@@ -13,8 +13,8 @@ const projects = await listProjects(user!.id)
   <Main heading="Projects" initialProjects={projects}>
     {
       projects.length ? (
-        <div class="mt-4 @container/project">
-          <div class="grid grid-cols-1 gap-4 @2xl/project:grid-cols-2 @5xl/project:grid-cols-3 @8xl/project:grid-cols-4">
+        <div class="@container/project mt-4">
+          <div class="@8xl/project:grid-cols-4 grid grid-cols-1 gap-4 @2xl/project:grid-cols-2 @5xl/project:grid-cols-3">
             {projects.map((project) => (
               <ProjectCard project={project} />
             ))}
