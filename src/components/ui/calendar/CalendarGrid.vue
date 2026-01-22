@@ -1,22 +1,24 @@
 <script lang="ts" setup>
-import { type HTMLAttributes, computed } from 'vue'
-import { CalendarGrid, type CalendarGridProps, useForwardProps } from 'radix-vue'
+import { reactiveOmit } from '@vueuse/core'
+import type { CalendarGridProps } from 'reka-ui'
+import { CalendarGrid, useForwardProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+
 import { cn } from '@/lib/utils'
 
-const props = defineProps<CalendarGridProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  CalendarGridProps & { class?: HTMLAttributes['class'] }
+>()
 
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
-
-  return delegated
-})
+const delegatedProps = reactiveOmit(props, 'class')
 
 const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
   <CalendarGrid
-    :class="cn('w-full border-collapse space-y-1', props.class)"
+    data-slot="calendar-grid"
+    :class="cn('w-full border-collapse space-x-1', props.class)"
     v-bind="forwardedProps"
   >
     <slot />

@@ -1,7 +1,9 @@
 <template>
-  <Card class="flex flex-col">
-    <CardHeader class="bg-muted/40 py-3">
-      <CardTitle class="truncate leading-normal">{{ title }}</CardTitle>
+  <Card class="flex flex-col gap-0 py-0">
+    <CardHeader class="bg-muted/40 gap-0 py-3">
+      <CardTitle class="truncate text-2xl leading-normal">{{
+        title
+      }}</CardTitle>
     </CardHeader>
     <CardContent class="flex flex-1 flex-col overflow-hidden p-0">
       <TaskInput @add="handleAddTask" />

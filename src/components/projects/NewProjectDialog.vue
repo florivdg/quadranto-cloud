@@ -10,7 +10,7 @@
           Create a new project. Fill in the form below to get started.
         </DialogDescription>
       </DialogHeader>
-      <ProjectForm @create="handleCreateProject" />
+      <ProjectForm @create="handleCreateProject" mode="create" />
     </DialogContent>
   </Dialog>
 </template>

@@ -8,16 +8,16 @@
 
         <div
           v-if="project.dueDate"
-          class="ml-2.5 flex items-center text-sm text-muted-foreground"
+          class="text-muted-foreground ml-2.5 flex items-center text-sm"
         >
-          <CalendarIcon class="mr-1 h-4 w-4 text-muted-foreground" />
+          <CalendarIcon class="text-muted-foreground mr-1 size-4" />
 
           <time datetime="{project.dueDate}">
             {{ formatDate(project.dueDate, locale) }}
           </time>
         </div>
       </div>
-      <p class="line-clamp-3 text-xl text-muted-foreground lg:line-clamp-2">
+      <p class="text-muted-foreground line-clamp-3 text-xl lg:line-clamp-2">
         {{ project.description }}
       </p>
     </div>

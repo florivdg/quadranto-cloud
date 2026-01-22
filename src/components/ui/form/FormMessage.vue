@@ -1,7 +1,15 @@
 <script lang="ts" setup>
 import { ErrorMessage } from 'vee-validate'
+import type { HTMLAttributes } from 'vue'
 import { toValue } from 'vue'
+
+import { cn } from '@/lib/utils'
+
 import { useFormField } from './useFormField'
+
+const props = defineProps<{
+  class?: HTMLAttributes['class']
+}>()
 
 const { name, formMessageId } = useFormField()
 </script>
@@ -9,8 +17,9 @@ const { name, formMessageId } = useFormField()
 <template>
   <ErrorMessage
     :id="formMessageId"
+    data-slot="form-message"
     as="p"
     :name="toValue(name)"
-    class="text-sm font-medium text-destructive"
+    :class="cn('text-destructive text-sm', props.class)"
   />
 </template>

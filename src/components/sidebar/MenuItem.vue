@@ -1,10 +1,10 @@
 <template>
   <a
     :href="href"
-    class="flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary"
+    class="hover:text-primary flex items-center gap-3 rounded-lg px-3 py-2 transition-all"
     :class="[isActive ? 'bg-muted text-primary' : 'text-muted-foreground']"
   >
-    <slot name="icon" iconClass="h-4 w-4"></slot>
+    <slot name="icon" iconClass="size-4"></slot>
     <slot />
   </a>
 </template>

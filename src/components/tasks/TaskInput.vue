@@ -1,16 +1,16 @@
 <template>
-  <div class="relative w-full items-center p-1.5 shadow-sm">
+  <div class="relative w-full items-center shadow-xs">
     <Input
       type="text"
       placeholder="Add task..."
-      class="h-8 rounded-none border-none py-0 pl-8"
+      class="h-12 rounded-none border-none py-0 pl-8"
       @keyup.enter="handleInput"
     />
     <span
       aria-hidden="true"
       class="absolute inset-y-0 start-0 flex items-center justify-center px-2"
     >
-      <Plus class="size-5 text-muted-foreground" />
+      <Plus class="text-muted-foreground size-5" />
     </span>
   </div>
 </template>
