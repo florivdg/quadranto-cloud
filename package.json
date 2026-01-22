@@ -19,7 +19,7 @@
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.1.0",
-    "astro": "5.16.12",
+    "astro": "5.16.14",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.1",
