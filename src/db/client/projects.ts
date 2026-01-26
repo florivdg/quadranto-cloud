@@ -8,9 +8,9 @@ import {
   projects,
   usersToProjects,
   tasks,
-  users,
+  user,
   type User,
-} from '@/db/schema'
+} from '@/db/schema/projects'
 
 /**
  * A project with the count of tasks associated with it.
@@ -29,9 +29,9 @@ export async function listProjects(userId: string): Promise<Project[]> {
   const rows = await db
     .select()
     .from(usersToProjects)
-    .leftJoin(users, eq(usersToProjects.userId, users.id))
+    .leftJoin(user, eq(usersToProjects.userId, user.id))
     .leftJoin(projects, eq(usersToProjects.projectId, projects.id))
-    .where(eq(users.id, userId))
+    .where(eq(user.id, userId))
     .orderBy(projects.title)
 
   const results = rows.map((row) => row.projects).filter(Boolean) as Project[]
@@ -61,12 +61,7 @@ export async function getProject(
         ? {
             columns: {},
             with: {
-              user: {
-                columns: { password: false },
-                with: {
-                  profile: true,
-                },
-              },
+              user: true,
             },
           }
         : undefined,
@@ -149,7 +144,7 @@ export async function deleteProject(
 /**
  * Adds an owner to a project.
  * @param projectId - The ID of the project.
- * @param addUserId - The ID of the profile to add as an owner.
+ * @param addUserId - The ID of the user to add as an owner.
  * @param requestingUserId - The ID of the user making the request.
  * @param force - A boolean indicating if the operation should be forced.
  * @returns A Promise that resolves to an object indicating the success of the operation.
@@ -211,7 +206,7 @@ export async function addOwner(
  * @param projectId - The ID of the project.
  * @param addUserId - The ID of the user to remove as an owner.
  * @param requestingUserId - The ID of the user making the request.
- * @returns A Promise that resolves when the profile-to-project relation is successfully deleted.
+ * @returns A Promise that resolves when the user-to-project relation is successfully deleted.
  */
 export async function removeOwner(
   projectId: string,
@@ -246,23 +241,18 @@ export async function removeOwner(
 export async function getOwners(
   projectId: string,
   requestingUserId: string,
-): Promise<Omit<User, 'password'>[]> {
+): Promise<User[]> {
   // * Check if the user is an owner of the project
   if (!(await isOwner(projectId, requestingUserId))) return []
 
   const owners = await db.query.usersToProjects.findMany({
     where: eq(usersToProjects.projectId, projectId),
     with: {
-      user: {
-        columns: { password: false },
-        with: {
-          profile: true,
-        },
-      },
+      user: true,
     },
   })
 
-  return owners.map((owner) => owner.user)
+  return owners.map((owner) => owner.user!)
 }
 
 /**

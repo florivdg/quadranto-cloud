@@ -2,7 +2,7 @@ import type { FetchError } from 'ofetch'
 
 import { backendClient, type ApiResponse } from '@/api'
 import { ApiError } from '@/api/ApiError'
-import type { NewTask, Task } from '@/db/schema'
+import type { NewTask, Task } from '@/db/schema/projects'
 
 /**
  * Adds a new task.

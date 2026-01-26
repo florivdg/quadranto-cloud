@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { CheckIcon } from 'lucide-vue-next'
 
-import type { Task } from '@/db/schema'
+import type { Task } from '@/db/schema/projects'
 
 /**
  * Props.

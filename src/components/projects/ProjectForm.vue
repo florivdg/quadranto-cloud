@@ -109,7 +109,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
-import { insertProjectSchema, type NewProject } from '@/db/schema.ts'
+import { insertProjectSchema, type NewProject } from '@/db/schema/projects'
 import { cn } from '@/lib/utils'
 
 /**

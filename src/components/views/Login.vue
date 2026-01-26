@@ -46,7 +46,9 @@
             />
           </div>
 
-          <Button type="submit" class="w-full">Sign in</Button>
+          <Button type="submit" class="w-full" :disabled="isLoading">
+            {{ isLoading ? 'Signing in...' : 'Sign in' }}
+          </Button>
         </div>
         <div class="mt-4 text-center text-sm">
           Don't have an account?
@@ -72,31 +74,33 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { authClient } from '@/lib/auth-client'
 
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
+const isLoading = ref(false)
 
 async function handleLogin() {
   errorMessage.value = ''
+  isLoading.value = true
 
-  /// Collect the form data
-  const body = new FormData()
-  body.append('username', username.value)
-  body.append('password', password.value)
+  try {
+    const result = await authClient.signIn.username({
+      username: username.value,
+      password: password.value,
+    })
 
-  /// Send the form data to the server
-  const response = await fetch('/api/auth/login', {
-    method: 'POST',
-    body,
-  })
-
-  /// Redirect to the home page if the login is successful
-  if (response.ok) {
-    window.location.href = '/'
-  } else {
-    const data = await response.json()
-    errorMessage.value = data.error ?? 'Invalid username or password'
+    if (result.error) {
+      errorMessage.value =
+        result.error.message ?? 'Invalid username or password'
+    } else {
+      window.location.href = '/'
+    }
+  } catch {
+    errorMessage.value = 'An unexpected error occurred'
+  } finally {
+    isLoading.value = false
   }
 }
 </script>

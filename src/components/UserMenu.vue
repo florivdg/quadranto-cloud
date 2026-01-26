@@ -28,15 +28,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { authClient } from '@/lib/auth-client'
 
 /**
  * Handles the logout functionality.
- * Sends a DELETE request to the '/api/auth/logout' endpoint and redirects the user to the login page.
+ * Uses Better Auth signOut and redirects the user to the login page.
  */
 async function handleLogout() {
-  await fetch('/api/auth/logout', {
-    method: 'DELETE',
-  })
+  await authClient.signOut()
   window.location.href = '/login'
 }
 </script>

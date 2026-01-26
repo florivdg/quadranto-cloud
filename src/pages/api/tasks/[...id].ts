@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
 
 import { getTask, updateTask, deleteTask } from '@/db/client/tasks'
-import type { Task } from '@/db/schema'
+import type { Task } from '@/db/schema/projects'
 import { isUUID } from '@/lib/validators'
 
 /**

@@ -69,13 +69,17 @@ src/
 
 ### Database Schema
 
-- **users** → **profiles** (1:1)
 - **users** ↔ **projects** (many-to-many via projects_users)
 - **projects** → **tasks** (1:many)
+- **users** → **tasks** (1:many via owner_id)
 - **tasks** have priority enum: low/medium/high/urgent
 
 ## Configuration Files
 
-- `drizzle.config.ts` - DB connection via env vars (POSTGRES_*)
+- `drizzle.config.ts` - DB connection via env vars (POSTGRES\_\*)
 - `components.json` - shadcn-vue config (new-york style, lucide icons)
 - `.prettierrc` - No semicolons, single quotes, Tailwind class sorting
+
+## Formatting
+
+Always run `bunx prettier --write .` on changed files after making edits to ensure consistent formatting.

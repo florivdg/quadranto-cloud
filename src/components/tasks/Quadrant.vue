@@ -25,7 +25,7 @@ import { computed } from 'vue'
 import TaskCell from '@/components/tasks/TaskCell.vue'
 import TaskInput from '@/components/tasks/TaskInput.vue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { Priority, Task } from '@/db/schema'
+import type { Priority, Task } from '@/db/schema/projects'
 
 /**
  * Props.

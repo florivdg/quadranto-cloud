@@ -42,7 +42,7 @@ import { Home, FolderOpen, FolderClosed, Settings } from 'lucide-vue-next'
 
 import SidebarMenuItem from '@/components/sidebar/MenuItem.vue'
 import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
-import type { Project } from '@/db/schema'
+import type { Project } from '@/db/schema/projects'
 
 defineProps<{
   activePath: string

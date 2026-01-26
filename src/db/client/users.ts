@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { type User, type NewUser, users } from '@/db/schema'
+import { user, type User } from '@/db/schema/projects'
 
 /**
  * Retrieves a user from the database by their username.
@@ -11,16 +11,6 @@ import { type User, type NewUser, users } from '@/db/schema'
 export async function getUserByUsername(
   username: string,
 ): Promise<User | null> {
-  const user = await db.select().from(users).where(eq(users.username, username))
-  return user[0] ?? null
-}
-
-/**
- * Creates a new user in the database.
- * @param data - The data for the new user.
- * @returns A promise that resolves to the created user.
- */
-export async function createUser(data: NewUser): Promise<User> {
-  const user = await db.insert(users).values(data).returning()
-  return user[0]
+  const result = await db.select().from(user).where(eq(user.username, username))
+  return result[0] ?? null
 }
