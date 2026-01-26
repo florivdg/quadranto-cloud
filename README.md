@@ -1,5 +1,30 @@
 # quadranto.cloud
 
+## v2.0.0 Breaking Changes
+
+This release migrates authentication from Lucia to Better Auth. **This is a breaking change that requires a fresh database.**
+
+### Migration Impact
+
+- All existing user accounts will be deleted
+- All project ownership data will be cleared
+- All session data will be invalidated
+- User ID format changes from UUID to text
+
+### Required Actions
+
+1. Back up any data you need to preserve
+2. Run database migration: `bunx drizzle-kit migrate`
+3. All users must re-register
+
+### New Auth System
+
+- Authentication now powered by [Better Auth](https://www.better-auth.com/)
+- Username/password login remains the same UX
+- Session cookies: `better-auth.session_token`
+
+---
+
 Powered by Astro. Uses bun.
 
 ## Developement Setup

@@ -10,26 +10,18 @@ import {
   boolean,
   uniqueIndex,
   primaryKey,
-  index,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 
-/**
- * Define the `users` schema for the database.
- */
-export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  username: varchar('username', { length: 128 }).notNull().unique(),
-  password: varchar('password', { length: 128 }).notNull(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-})
+export { user, session, account, verification } from './auth-schema'
+import { user } from './auth-schema'
 
 /**
- * Define the relations for the `users` schema.
+ * Define the relations for the `user` schema.
  */
-export const usersRelations = relations(users, ({ many, one }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   profile: one(profiles, {
-    fields: [users.id],
+    fields: [user.id],
     references: [profiles.id],
   }),
   projects: many(usersToProjects),
@@ -37,33 +29,14 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 }))
 
 /**
- * Define the `sessions` schema for the database.
- */
-export const sessions = pgTable(
-  'sessions',
-  {
-    id: text('id').primaryKey(),
-    userId: uuid('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    expiresAt: timestamp('expires_at', {
-      withTimezone: true,
-      mode: 'date',
-    }).notNull(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-  },
-  (table) => [index('session_user_id_idx').on(table.userId)],
-)
-
-/**
  * Define the `user profiles` schema for the database.
  */
 export const profiles = pgTable(
   'profiles',
   {
-    id: uuid('id')
+    id: text('id')
       .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
+      .references(() => user.id, { onDelete: 'cascade' }),
     name: varchar('name', { length: 1024 }).notNull(),
     email: varchar('email', { length: 1024 }).notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -79,9 +52,9 @@ export const profiles = pgTable(
  * Define the relations for the `profiles` schema.
  */
 export const profilesRelations = relations(profiles, ({ one }) => ({
-  user: one(users, {
+  user: one(user, {
     fields: [profiles.id],
-    references: [users.id],
+    references: [user.id],
   }),
 }))
 
@@ -115,9 +88,9 @@ export const projectRelations = relations(projects, ({ many }) => ({
 export const usersToProjects = pgTable(
   'projects_users',
   {
-    userId: uuid('user_id')
+    userId: text('user_id')
       .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
+      .references(() => user.id, { onDelete: 'cascade' }),
     projectId: uuid('project_id')
       .notNull()
       .references(() => projects.id, { onDelete: 'cascade' }),
@@ -135,9 +108,9 @@ export const usersToProjectsRelations = relations(
       fields: [usersToProjects.projectId],
       references: [projects.id],
     }),
-    user: one(users, {
+    user: one(user, {
       fields: [usersToProjects.userId],
-      references: [users.id],
+      references: [user.id],
     }),
   }),
 )
@@ -167,24 +140,24 @@ export const tasks = pgTable('tasks', {
   projectId: uuid('project_id')
     .notNull()
     .references(() => projects.id, { onDelete: 'cascade' }),
-  ownerId: uuid('owner_id').references(() => users.id),
+  ownerId: text('owner_id').references(() => user.id),
 })
 
 /**
  * Define the relations for the `tasks` schema.
  */
 export const tasksRelations = relations(tasks, ({ one }) => ({
-  owner: one(users, {
+  owner: one(user, {
     fields: [tasks.ownerId],
-    references: [users.id],
+    references: [user.id],
   }),
 }))
 
 /**
  * Infer types.
  */
-export type User = typeof users.$inferSelect
-export type NewUser = typeof users.$inferInsert
+export type User = typeof user.$inferSelect
+export type NewUser = typeof user.$inferInsert
 export type Profile = typeof profiles.$inferSelect
 export type NewProfile = typeof profiles.$inferInsert
 export type Project = typeof projects.$inferSelect

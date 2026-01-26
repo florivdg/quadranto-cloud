@@ -36,7 +36,9 @@
               autocomplete="new-password"
             />
           </div>
-          <Button type="submit" class="w-full">Create an account</Button>
+          <Button type="submit" class="w-full" :disabled="isLoading">
+            {{ isLoading ? 'Creating account...' : 'Create an account' }}
+          </Button>
         </div>
         <div class="mt-4 text-center text-sm">
           Already have an account?
@@ -62,29 +64,34 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { authClient } from '@/lib/auth-client'
 
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
+const isLoading = ref(false)
 
 async function handleSignup() {
-  /// Build the form data
-  const body = new FormData()
-  body.append('username', username.value)
-  body.append('password', password.value)
+  errorMessage.value = ''
+  isLoading.value = true
 
-  /// Send the form data to the server
-  const response = await fetch('/api/auth/signup', {
-    method: 'POST',
-    body,
-  })
+  try {
+    const result = await authClient.signUp.email({
+      email: `${username.value}@placeholder.local`,
+      password: password.value,
+      username: username.value,
+      name: username.value,
+    })
 
-  /// Handle the response
-  if (response.ok) {
-    window.location.href = '/'
-  } else {
-    const data = await response.json()
-    errorMessage.value = data.error ?? 'Invalid username or password'
+    if (result.error) {
+      errorMessage.value = result.error.message ?? 'Failed to create account'
+    } else {
+      window.location.href = '/'
+    }
+  } catch {
+    errorMessage.value = 'An unexpected error occurred'
+  } finally {
+    isLoading.value = false
   }
 }
 </script>

@@ -1,45 +1,17 @@
 import { sequence, defineMiddleware } from 'astro:middleware'
 
-import { lucia } from '@/lib/auth'
+import { auth } from '@/lib/auth'
 
 /**
- * Middleware for creating and validating sessions.
+ * Middleware for creating and validating sessions using Better Auth.
  */
 const session = defineMiddleware(async (context, next) => {
-  const authorizationHeader = context.request.headers.get('Authorization')
-  const sessionId =
-    context.cookies.get(lucia.sessionCookieName)?.value ??
-    lucia.readBearerToken(authorizationHeader ?? '') ??
-    null
+  const session = await auth.api.getSession({
+    headers: context.request.headers,
+  })
 
-  if (!sessionId) {
-    context.locals.user = null
-    context.locals.session = null
-    return next()
-  }
-
-  const { session, user } = await lucia.validateSession(sessionId)
-
-  if (session && session.fresh) {
-    const sessionCookie = lucia.createSessionCookie(session.id)
-    context.cookies.set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    )
-  }
-
-  if (!session) {
-    const sessionCookie = lucia.createBlankSessionCookie()
-    context.cookies.set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    )
-  }
-
-  context.locals.session = session
-  context.locals.user = user
+  context.locals.session = session?.session ?? null
+  context.locals.user = session?.user ?? null
 
   return next()
 })
@@ -47,16 +19,15 @@ const session = defineMiddleware(async (context, next) => {
 /**
  * Middleware for checking if a user is authenticated.
  */
-const auth = defineMiddleware(async (context, next) => {
-  const whitelist = [
-    '/login',
-    '/signup',
-    '/password-reset',
-    '/api/auth/login',
-    '/api/auth/signup',
-  ]
+const authMiddleware = defineMiddleware(async (context, next) => {
+  const whitelist = ['/login', '/signup', '/password-reset']
 
   const reqUrl = new URL(context.request.url)
+
+  // Allow all Better Auth API routes through
+  if (reqUrl.pathname.startsWith('/api/auth')) {
+    return next()
+  }
 
   if (!context.locals.user && !whitelist.includes(reqUrl.pathname)) {
     // Return 401 response when hitting an API route
@@ -77,4 +48,4 @@ const auth = defineMiddleware(async (context, next) => {
 /**
  * Middleware to run the session and auth middleware in sequence.
  */
-export const onRequest = sequence(session, auth)
+export const onRequest = sequence(session, authMiddleware)

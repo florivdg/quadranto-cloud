@@ -8,7 +8,7 @@ import {
   projects,
   usersToProjects,
   tasks,
-  users,
+  user,
   type User,
 } from '@/db/schema'
 
@@ -29,9 +29,9 @@ export async function listProjects(userId: string): Promise<Project[]> {
   const rows = await db
     .select()
     .from(usersToProjects)
-    .leftJoin(users, eq(usersToProjects.userId, users.id))
+    .leftJoin(user, eq(usersToProjects.userId, user.id))
     .leftJoin(projects, eq(usersToProjects.projectId, projects.id))
-    .where(eq(users.id, userId))
+    .where(eq(user.id, userId))
     .orderBy(projects.title)
 
   const results = rows.map((row) => row.projects).filter(Boolean) as Project[]
@@ -62,7 +62,6 @@ export async function getProject(
             columns: {},
             with: {
               user: {
-                columns: { password: false },
                 with: {
                   profile: true,
                 },
@@ -246,7 +245,7 @@ export async function removeOwner(
 export async function getOwners(
   projectId: string,
   requestingUserId: string,
-): Promise<Omit<User, 'password'>[]> {
+): Promise<User[]> {
   // * Check if the user is an owner of the project
   if (!(await isOwner(projectId, requestingUserId))) return []
 
@@ -254,7 +253,6 @@ export async function getOwners(
     where: eq(usersToProjects.projectId, projectId),
     with: {
       user: {
-        columns: { password: false },
         with: {
           profile: true,
         },
@@ -262,7 +260,7 @@ export async function getOwners(
     },
   })
 
-  return owners.map((owner) => owner.user)
+  return owners.map((owner) => owner.user!)
 }
 
 /**

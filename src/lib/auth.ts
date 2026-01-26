@@ -1,27 +1,24 @@
-import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
-import { Lucia } from 'lucia'
+import { betterAuth } from 'better-auth'
+import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { username } from 'better-auth/plugins'
 
 import { db } from '@/db'
-import { users, sessions, type User } from '@/db/schema'
 
-const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users)
-
-export const lucia = new Lucia(adapter, {
-  sessionCookie: {
-    attributes: {
-      secure: import.meta.env.PROD,
+export const auth = betterAuth({
+  database: drizzleAdapter(db, {
+    provider: 'pg',
+  }),
+  emailAndPassword: {
+    enabled: true,
+    password: {
+      hash: (password) => Bun.password.hash(password),
+      verify: ({ hash, password }) => Bun.password.verify(password, hash),
     },
   },
-  getUserAttributes: (attributes) => {
-    return {
-      username: attributes.username,
-    }
-  },
+  plugins: [
+    username({
+      minUsernameLength: 3,
+      maxUsernameLength: 31,
+    }),
+  ],
 })
-
-declare module 'lucia' {
-  interface Register {
-    Lucia: typeof lucia
-    DatabaseUserAttributes: Omit<User, 'id'>
-  }
-}
