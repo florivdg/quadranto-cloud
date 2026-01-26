@@ -26,7 +26,7 @@
               autocomplete="username"
               required
             />
-            <p v-if="usernameError" class="text-sm text-destructive">
+            <p v-if="usernameError" class="text-destructive text-sm">
               {{ usernameError }}
             </p>
           </div>

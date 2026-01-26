@@ -92,7 +92,8 @@ async function handleLogin() {
     })
 
     if (result.error) {
-      errorMessage.value = result.error.message ?? 'Invalid username or password'
+      errorMessage.value =
+        result.error.message ?? 'Invalid username or password'
     } else {
       window.location.href = '/'
     }
