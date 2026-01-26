@@ -26,6 +26,9 @@
               autocomplete="username"
               required
             />
+            <p v-if="usernameError" class="text-sm text-destructive">
+              {{ usernameError }}
+            </p>
           </div>
           <div class="grid gap-2">
             <Label for="password">Password</Label>
@@ -36,7 +39,11 @@
               autocomplete="new-password"
             />
           </div>
-          <Button type="submit" class="w-full" :disabled="isLoading">
+          <Button
+            type="submit"
+            class="w-full"
+            :disabled="isLoading || !!usernameError"
+          >
             {{ isLoading ? 'Creating account...' : 'Create an account' }}
           </Button>
         </div>
@@ -51,7 +58,7 @@
 
 <script setup lang="ts">
 import { AlertCircle } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -65,14 +72,28 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authClient } from '@/lib/auth-client'
+import { validateUsername } from '@/lib/validators'
 
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const isLoading = ref(false)
 
+const usernameError = computed(() => {
+  if (!username.value) return ''
+  const result = validateUsername(username.value)
+  return result.error ?? ''
+})
+
 async function handleSignup() {
   errorMessage.value = ''
+
+  const validation = validateUsername(username.value)
+  if (!validation.valid) {
+    errorMessage.value = validation.error ?? 'Invalid username'
+    return
+  }
+
   isLoading.value = true
 
   try {
