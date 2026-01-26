@@ -26,7 +26,7 @@ import { ref } from 'vue'
 import { addTask, updateTask } from '@/api'
 import ProjectHeader from '@/components/projects/ProjectHeader.vue'
 import Quadrant from '@/components/tasks/Quadrant.vue'
-import type { NewTask, Priority, Project, Task } from '@/db/schema'
+import type { NewTask, Priority, Project, Task } from '@/db/schema/projects'
 
 /**
  * Available priorities.

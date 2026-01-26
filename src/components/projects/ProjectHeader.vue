@@ -31,7 +31,7 @@
 import { CalendarIcon } from 'lucide-vue-next'
 
 import ProjectHeaderActions from '@/components/projects/ProjectHeaderActions.vue'
-import { type Project } from '@/db/schema'
+import { type Project } from '@/db/schema/projects'
 import { formatDate } from '@/lib/formatters'
 
 defineProps<{

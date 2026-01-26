@@ -8,54 +8,20 @@ import {
   timestamp,
   pgEnum,
   boolean,
-  uniqueIndex,
   primaryKey,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 
-export { user, session, account, verification } from './auth-schema'
-import { user } from './auth-schema'
+import { user } from './auth'
+
+export { user, session, account, verification } from './auth'
 
 /**
  * Define the relations for the `user` schema.
  */
-export const userRelations = relations(user, ({ many, one }) => ({
-  profile: one(profiles, {
-    fields: [user.id],
-    references: [profiles.id],
-  }),
+export const userRelations = relations(user, ({ many }) => ({
   projects: many(usersToProjects),
   tasks: many(tasks),
-}))
-
-/**
- * Define the `user profiles` schema for the database.
- */
-export const profiles = pgTable(
-  'profiles',
-  {
-    id: text('id')
-      .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
-    name: varchar('name', { length: 1024 }).notNull(),
-    email: varchar('email', { length: 1024 }).notNull(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    updatedAt: timestamp('updated_at'),
-  },
-  (table) => [
-    uniqueIndex('id_idx').on(table.id),
-    uniqueIndex('email_idx').on(table.email),
-  ],
-)
-
-/**
- * Define the relations for the `profiles` schema.
- */
-export const profilesRelations = relations(profiles, ({ one }) => ({
-  user: one(user, {
-    fields: [profiles.id],
-    references: [user.id],
-  }),
 }))
 
 /**
@@ -158,8 +124,6 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
  */
 export type User = typeof user.$inferSelect
 export type NewUser = typeof user.$inferInsert
-export type Profile = typeof profiles.$inferSelect
-export type NewProfile = typeof profiles.$inferInsert
 export type Project = typeof projects.$inferSelect
 export type NewProject = typeof projects.$inferInsert
 export type Task = typeof tasks.$inferSelect

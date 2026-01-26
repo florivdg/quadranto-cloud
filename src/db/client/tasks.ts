@@ -2,7 +2,7 @@ import { eq, desc } from 'drizzle-orm'
 
 import { db } from '@/db'
 import { isOwner } from '@/db/client/projects'
-import { type Task, type NewTask, tasks } from '@/db/schema'
+import { type Task, type NewTask, tasks } from '@/db/schema/projects'
 
 /**
  * Retrieves a list of tasks for a given project ID.

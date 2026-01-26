@@ -9,8 +9,7 @@ if (process.env.POSTGRES_PASSWORD_FILE) {
 }
 
 export default {
-  schema: './src/db/schema.ts',
-  out: './src/db/migrations',
+  schema: './src/db/schema',
   dialect: 'postgresql',
   dbCredentials: {
     user: process.env.POSTGRES_USER!,
@@ -19,6 +18,4 @@ export default {
     host: process.env.POSTGRES_HOST!,
     port: parseInt(process.env.POSTGRES_PORT!),
   },
-  verbose: true,
-  strict: true,
 } satisfies Config

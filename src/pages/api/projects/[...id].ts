@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
 
 import { getProject, updateProject, deleteProject } from '@/db/client/projects'
-import type { Project } from '@/db/schema'
+import type { Project } from '@/db/schema/projects'
 import { isUUID } from '@/lib/validators'
 
 /**

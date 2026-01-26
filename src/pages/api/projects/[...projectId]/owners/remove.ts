@@ -11,11 +11,11 @@ export const DELETE: APIRoute = async ({ locals, params, request }) => {
   const { projectId } = params
   const { userId } = await request.json()
 
-  if (!projectId || !userId || !isUUID(projectId) || !isUUID(userId)) {
+  if (!projectId || !userId || !isUUID(projectId)) {
     const status = 400
     return new Response(
       JSON.stringify({
-        message: 'Missing project or profile ID or malformed UUID(s).',
+        message: 'Missing project or user ID or malformed project ID.',
         code: status,
       }),
       { status, headers: { 'Content-Type': 'application/json' } },

@@ -28,7 +28,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import type { NewProject } from '@/db/schema'
+import type { NewProject } from '@/db/schema/projects'
 
 withDefaults(
   defineProps<{

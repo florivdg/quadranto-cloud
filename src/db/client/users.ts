@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm'
 
 import { db } from '@/db'
-import { user, type User } from '@/db/schema'
+import { user, type User } from '@/db/schema/projects'
 
 /**
  * Retrieves a user from the database by their username.
