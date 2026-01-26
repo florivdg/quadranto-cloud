@@ -79,3 +79,7 @@ src/
 - `drizzle.config.ts` - DB connection via env vars (POSTGRES\_\*)
 - `components.json` - shadcn-vue config (new-york style, lucide icons)
 - `.prettierrc` - No semicolons, single quotes, Tailwind class sorting
+
+## Formatting
+
+Always run `bunx prettier --write .` on changed files after making edits to ensure consistent formatting.
