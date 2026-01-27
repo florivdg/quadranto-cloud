@@ -14,9 +14,10 @@ const DB_URL = `postgres://${Bun.env.POSTGRES_USER}:${DB_PASSWORD}@${Bun.env.POS
 const client = new SQL(DB_URL)
 const db = drizzle({ client })
 
-console.log('Running database migrations...')
-await migrate(db, { migrationsFolder: './drizzle' })
-console.log('Migrations complete.')
-
-// Close connection
-client.close()
+try {
+  console.log('Running database migrations...')
+  await migrate(db, { migrationsFolder: './drizzle' })
+  console.log('Migrations complete.')
+} finally {
+  await client.close()
+}
