@@ -45,3 +45,18 @@ export async function updateProject(
     return [null, apiError]
   }
 }
+
+/**
+ * Deletes a project.
+ * @param id - The ID of the project to delete.
+ * @returns A promise that resolves to an array containing undefined and any error that occurred during the operation.
+ */
+export async function deleteProject(id: string): Promise<ApiResponse<void>> {
+  try {
+    await backendClient(`projects/${id}`, { method: 'DELETE' })
+    return [undefined, null]
+  } catch (error) {
+    const apiError = ApiError.fromFetchError(error as FetchError)
+    return [null, apiError]
+  }
+}
