@@ -12,16 +12,16 @@ Quadranto Cloud is a task management application using the Eisenhower Matrix pri
 # Development setup
 docker compose -f docker-compose.dev.yaml up -d   # Start PostgreSQL container
 bunx drizzle-kit migrate                          # Run database migrations
-bun --bun run dev                                 # Start dev server (native Bun)
+bun --bun run dev                                 # Start dev server (native Bun) [Note: do not run this unless told to]
 
 # Build & preview
 bun run build                                     # Build for production (runs astro check first)
 bun run preview                                   # Preview production build
 
 # Database
-bun run db:generate                               # Generate new migration
-bun run db:push                                   # Push schema changes directly
-bun run db:migrate                                # Run pending migrations
+bun run db:generate                               # Generate new migration [Note: do not run this unless told to]
+bun run db:push                                   # Push schema changes directly [Note: do not run this unless told to]
+bun run db:migrate                                # Run pending migrations [Note: do not run this unless told to]
 ```
 
 ## Tech Stack
@@ -39,22 +39,26 @@ bun run db:migrate                                # Run pending migrations
 
 ```
 src/
-├── api/              # API client (ofetch) and ApiError class
+├── api/              # API client (ofetch), ApiError, and endpoint modules (project.ts, tasks.ts)
 ├── components/
-│   ├── ui/           # shadcn-vue components
+│   ├── ui/           # shadcn-vue components [Note: do not edit this folder directly]
+│   ├── sidebar/      # Sidebar navigation components
 │   ├── tasks/        # Task quadrants and inputs
 │   ├── projects/     # Project management UI
 │   └── views/        # Page-level Vue components (Login, Signup)
 ├── db/
-│   ├── schema.ts     # Drizzle schema definitions
+│   ├── schema/       # Drizzle schema definitions (auth.ts, projects.ts)
 │   ├── client/       # Query functions (projects.ts, tasks.ts, users.ts)
-│   └── migrations/   # Auto-generated Drizzle migrations
+│   ├── index.ts      # Database connection
+│   └── migrate.ts    # Migration runner
+├── layouts/          # App.astro (root), Main.astro (authenticated layout)
+├── lib/              # Utilities (auth.ts, auth-client.ts, formatters.ts, utils.ts, validators.ts)
 ├── pages/
 │   ├── api/          # REST endpoints (/auth, /projects, /tasks)
 │   └── projects/     # Project pages with dynamic routing
-├── layouts/          # App.astro (root), Main.astro (authenticated layout)
-├── lib/              # Utilities (auth.ts, formatters.ts, validators.ts)
+├── styles/           # Global CSS (globals.css)
 └── middleware.ts     # Session validation and route protection
+drizzle/              # Auto-generated Drizzle migrations (at project root) [Note: do not edit this folder]
 ```
 
 ### Key Patterns
@@ -79,6 +83,15 @@ src/
 - `drizzle.config.ts` - DB connection via env vars (POSTGRES\_\*)
 - `components.json` - shadcn-vue config (new-york style, lucide icons)
 - `.prettierrc` - No semicolons, single quotes, Tailwind class sorting
+
+## Checks and Linting
+
+After making changes, ensure to run the following checks:
+
+```bash
+bun run astro check        # Astro type checking
+bun run lint --type-aware  # Oxlint type-aware linting
+```
 
 ## Formatting
 
