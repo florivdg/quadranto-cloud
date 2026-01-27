@@ -7,7 +7,7 @@
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuItem>
+      <DropdownMenuItem @click="editDialogOpen = true">
         <Pencil class="mr-2 size-4" />
         <span>Edit</span>
       </DropdownMenuItem>
@@ -17,11 +17,15 @@
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
+
+  <EditProjectDialog v-model:open="editDialogOpen" :project="project" />
 </template>
 
 <script setup lang="ts">
 import { MoreVertical, Pencil, Trash2 } from 'lucide-vue-next'
+import { ref } from 'vue'
 
+import EditProjectDialog from '@/components/projects/EditProjectDialog.vue'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -29,4 +33,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
+import type { Project } from '@/db/schema/projects'
+
+defineProps<{
+  project: Project
+}>()
+
+const editDialogOpen = ref(false)
 </script>

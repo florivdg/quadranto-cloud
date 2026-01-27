@@ -22,7 +22,7 @@
       </p>
     </div>
     <div>
-      <ProjectHeaderActions />
+      <ProjectHeaderActions :project="project" />
     </div>
   </div>
 </template>

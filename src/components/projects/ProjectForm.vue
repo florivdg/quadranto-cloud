@@ -76,7 +76,9 @@
       </FormItem>
     </FormField>
 
-    <Button type="submit">Create Project</Button>
+    <Button type="submit">{{
+      mode === 'edit' ? 'Save Changes' : 'Create Project'
+    }}</Button>
   </form>
 </template>
 
@@ -115,9 +117,10 @@ import { cn } from '@/lib/utils'
 /**
  * Props.
  */
-withDefaults(
+const props = withDefaults(
   defineProps<{
     mode: 'create' | 'edit'
+    initialValues?: Partial<NewProject>
   }>(),
   { mode: 'create' },
 )
@@ -127,6 +130,7 @@ withDefaults(
  */
 const emit = defineEmits<{
   create: [project: NewProject]
+  update: [project: NewProject]
 }>()
 
 /// Convert from drizzle-zod schema to vee-validate schema
@@ -135,6 +139,7 @@ const formSchema = toTypedSchema(insertProjectSchema)
 /// Create the form instance for validation
 const form = useForm({
   validationSchema: formSchema,
+  initialValues: props.initialValues,
 })
 
 /// Date formatter for the due date field
@@ -153,6 +158,10 @@ const dueDateValue = computed({
 
 /// Handle form submission
 const onSubmit = form.handleSubmit((values) => {
-  emit('create', values)
+  if (props.mode === 'edit') {
+    emit('update', values)
+  } else {
+    emit('create', values)
+  }
 })
 </script>
