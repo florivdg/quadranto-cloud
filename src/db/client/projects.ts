@@ -1,5 +1,5 @@
+import { SQL } from 'bun'
 import { and, count, eq } from 'drizzle-orm'
-import { type PostgresError } from 'postgres'
 
 import { db } from '@/db'
 import {
@@ -186,7 +186,7 @@ export async function addOwner(
     console.error(error)
 
     /// Check if the error is due to a duplicate key violation.
-    if ((error as PostgresError)?.code === '23505') {
+    if (error instanceof SQL.PostgresError && error.code === '23505') {
       return {
         success: true,
         inserted: false,

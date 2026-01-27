@@ -8,14 +8,13 @@ if (process.env.POSTGRES_PASSWORD_FILE) {
   DB_PASSWORD = readFileSync(process.env.POSTGRES_PASSWORD_FILE, 'utf8').trim()
 }
 
+const DB_URL = `postgres://${process.env.POSTGRES_USER}:${DB_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT ?? '5432'}/${process.env.POSTGRES_DB}`
+
 export default {
   schema: './src/db/schema',
+  out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    user: process.env.POSTGRES_USER!,
-    password: DB_PASSWORD,
-    database: process.env.POSTGRES_DB!,
-    host: process.env.POSTGRES_HOST!,
-    port: parseInt(process.env.POSTGRES_PORT!),
+    url: DB_URL,
   },
 } satisfies Config
