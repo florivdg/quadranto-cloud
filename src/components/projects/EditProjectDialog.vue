@@ -45,6 +45,7 @@ const initialValues = computed(() => ({
   title: props.project.title,
   description: props.project.description ?? undefined,
   dueDate: props.project.dueDate ?? undefined,
+  quadrantLabels: props.project.quadrantLabels ?? undefined,
 }))
 
 async function handleUpdateProject(payload: NewProject) {

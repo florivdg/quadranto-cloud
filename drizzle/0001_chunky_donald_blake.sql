@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ADD COLUMN "quadrant_labels" jsonb;

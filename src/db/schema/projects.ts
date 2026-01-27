@@ -9,12 +9,23 @@ import {
   pgEnum,
   boolean,
   primaryKey,
+  jsonb,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
 
 import { user } from './auth'
 
 export { user, session, account, verification } from './auth'
+
+/**
+ * Custom labels for the Eisenhower Matrix quadrants.
+ */
+export interface QuadrantLabels {
+  urgent?: string
+  high?: string
+  medium?: string
+  low?: string
+}
 
 /**
  * Define the relations for the `user` schema.
@@ -32,6 +43,7 @@ export const projects = pgTable('projects', {
   title: varchar('title', { length: 1024 }).notNull(),
   description: text('description'),
   dueDate: date('due_date'),
+  quadrantLabels: jsonb('quadrant_labels').$type<QuadrantLabels>(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at'),
 })

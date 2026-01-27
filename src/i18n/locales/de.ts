@@ -47,6 +47,7 @@ export const de: Translations = {
     editProject: 'Projekt bearbeiten',
     editProjectDesc:
       'Bearbeite die Projektdetails. Aktualisiere das Formular, um Änderungen zu speichern.',
+    editTitle: 'Doppelklick zum Bearbeiten des Titels',
     deleteProject: 'Projekt löschen',
     deleteProjectConfirm: (title: string) =>
       `Bist du sicher, dass du "${title}" löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden und entfernt alle zugehörigen Aufgaben.`,
@@ -64,6 +65,9 @@ export const de: Translations = {
     dueDatePlaceholder: 'Fälligkeitsdatum auswählen',
     saveChanges: 'Änderungen speichern',
     createProject: 'Projekt erstellen',
+    quadrantLabels: 'Quadranten-Bezeichnungen',
+    quadrantLabelsDescription:
+      'Passe die Namen deiner Eisenhower-Matrix-Quadranten an',
   },
   tasks: {
     addTask: 'Aufgabe hinzufügen...',
@@ -74,6 +78,7 @@ export const de: Translations = {
     importantNotUrgent: 'Wichtig, aber nicht Dringend',
     urgentNotImportant: 'Dringend, aber nicht Wichtig',
     notImportantNotUrgent: 'Nicht Wichtig, nicht Dringend',
+    editLabel: 'Doppelklick zum Bearbeiten',
   },
   settings: {
     title: 'Einstellungen',

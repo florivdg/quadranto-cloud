@@ -3,7 +3,11 @@
     <div
       class="h-full overflow-y-auto p-4 lg:p-6 @2xl/project:flex @2xl/project:h-full @2xl/project:flex-col @2xl/project:overflow-hidden"
     >
-      <ProjectHeader :project="project" :locale="locale" />
+      <ProjectHeader
+        :project="currentProject"
+        :locale="locale"
+        @update-title="handleUpdateTitle"
+      />
       <div
         class="grid grid-cols-1 gap-4 @2xl/project:h-full @2xl/project:grid-cols-2 @2xl/project:grid-rows-2 @2xl/project:overflow-hidden"
       >
@@ -11,10 +15,13 @@
           :priority="prio"
           :tasks="tasksForPriority(prio)"
           :locale="locale"
+          :custom-labels="currentProject.quadrantLabels"
+          :project-id="currentProject.id"
           v-for="prio in prios"
           :key="`task-card-${prio}`"
           @add="handleAddTask($event, prio)"
           @toggle-done="handleToggleDone($event)"
+          @update-label="handleUpdateLabel"
         />
       </div>
     </div>
@@ -25,9 +32,16 @@
 import { ref } from 'vue'
 
 import { addTask, updateTask } from '@/api'
+import { updateProject } from '@/api/project'
 import ProjectHeader from '@/components/projects/ProjectHeader.vue'
 import Quadrant from '@/components/tasks/Quadrant.vue'
-import type { NewTask, Priority, Project, Task } from '@/db/schema/projects'
+import type {
+  NewTask,
+  Priority,
+  Project,
+  QuadrantLabels,
+  Task,
+} from '@/db/schema/projects'
 import type { Locale } from '@/i18n'
 
 /**
@@ -49,6 +63,12 @@ const props = defineProps<{
  * Local truth of tasks.
  */
 const tasks = ref<Task[]>(props.initialTasks)
+
+/**
+ * Current project ref.
+ * Local truth of project state (for quadrant labels).
+ */
+const currentProject = ref<Project>({ ...props.project })
 
 /**
  * Returns an array of tasks filtered by priority.
@@ -117,6 +137,77 @@ async function handleToggleDone(task: Task) {
     )
 
     /// TODO: Show error message.
+    console.error(error)
+  }
+}
+
+/**
+ * Handle updating the project title.
+ *
+ * @param title - The new title value.
+ */
+async function handleUpdateTitle(title: string) {
+  // Optimistically update local state
+  const previousTitle = currentProject.value.title
+  currentProject.value = {
+    ...currentProject.value,
+    title,
+  }
+
+  // Persist to database
+  const [, error] = await updateProject(props.project.id, { title })
+
+  if (error) {
+    // Revert on error
+    currentProject.value = {
+      ...currentProject.value,
+      title: previousTitle,
+    }
+    console.error(error)
+  }
+}
+
+/**
+ * Handle updating a quadrant label.
+ *
+ * @param priority - The priority/quadrant to update.
+ * @param label - The new label value (empty string clears custom label).
+ */
+async function handleUpdateLabel(priority: Priority, label: string) {
+  // Build updated labels object
+  const newLabels: QuadrantLabels = {
+    ...currentProject.value.quadrantLabels,
+  }
+
+  if (label) {
+    newLabels[priority] = label
+  } else {
+    // Clear the custom label
+    delete newLabels[priority]
+  }
+
+  // Check if all labels are empty - store null instead of empty object
+  const hasAnyLabel = Object.values(newLabels).some((v) => v?.trim())
+  const labelsToStore = hasAnyLabel ? newLabels : null
+
+  // Optimistically update local state
+  const previousLabels = currentProject.value.quadrantLabels
+  currentProject.value = {
+    ...currentProject.value,
+    quadrantLabels: labelsToStore,
+  }
+
+  // Persist to database
+  const [, error] = await updateProject(props.project.id, {
+    quadrantLabels: labelsToStore,
+  })
+
+  if (error) {
+    // Revert on error
+    currentProject.value = {
+      ...currentProject.value,
+      quadrantLabels: previousLabels,
+    }
     console.error(error)
   }
 }

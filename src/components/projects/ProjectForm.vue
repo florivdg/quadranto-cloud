@@ -78,6 +78,85 @@
       </FormItem>
     </FormField>
 
+    <Collapsible v-model:open="labelsOpen" class="space-y-2">
+      <div class="flex items-center gap-2">
+        <CollapsibleTrigger as-child>
+          <Button variant="ghost" size="sm" class="-ml-2 gap-1 px-2">
+            <ChevronRight
+              class="size-4 transition-transform"
+              :class="{ 'rotate-90': labelsOpen }"
+            />
+            {{ t.projectForm.quadrantLabels }}
+          </Button>
+        </CollapsibleTrigger>
+      </div>
+      <CollapsibleContent class="space-y-3">
+        <p class="text-muted-foreground text-sm">
+          {{ t.projectForm.quadrantLabelsDescription }}
+        </p>
+
+        <FormField v-slot="{ componentField }" name="quadrantLabels.urgent">
+          <FormItem>
+            <FormControl>
+              <div class="flex items-center gap-2">
+                <span class="shrink-0 text-lg">🔥</span>
+                <Input
+                  type="text"
+                  :placeholder="t.quadrants.urgentImportant"
+                  v-bind="componentField"
+                />
+              </div>
+            </FormControl>
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="quadrantLabels.high">
+          <FormItem>
+            <FormControl>
+              <div class="flex items-center gap-2">
+                <span class="shrink-0 text-lg">⏰</span>
+                <Input
+                  type="text"
+                  :placeholder="t.quadrants.importantNotUrgent"
+                  v-bind="componentField"
+                />
+              </div>
+            </FormControl>
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="quadrantLabels.medium">
+          <FormItem>
+            <FormControl>
+              <div class="flex items-center gap-2">
+                <span class="shrink-0 text-lg">⚡</span>
+                <Input
+                  type="text"
+                  :placeholder="t.quadrants.urgentNotImportant"
+                  v-bind="componentField"
+                />
+              </div>
+            </FormControl>
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="quadrantLabels.low">
+          <FormItem>
+            <FormControl>
+              <div class="flex items-center gap-2">
+                <span class="shrink-0 text-lg">💤</span>
+                <Input
+                  type="text"
+                  :placeholder="t.quadrants.notImportantNotUrgent"
+                  v-bind="componentField"
+                />
+              </div>
+            </FormControl>
+          </FormItem>
+        </FormField>
+      </CollapsibleContent>
+    </Collapsible>
+
     <Button type="submit">{{
       mode === 'edit' ? t.projectForm.saveChanges : t.projectForm.createProject
     }}</Button>
@@ -92,13 +171,18 @@ import {
   today,
 } from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
-import { Calendar as CalendarIcon } from 'lucide-vue-next'
+import { Calendar as CalendarIcon, ChevronRight } from 'lucide-vue-next'
 import { toDate } from 'reka-ui/date'
 import { useForm } from 'vee-validate'
 import { computed, ref } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
 import {
   FormControl,
   FormField,
@@ -113,9 +197,17 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
-import { insertProjectSchema, type NewProject } from '@/db/schema/projects'
+import type { NewProject, QuadrantLabels } from '@/db/schema/projects'
+import { insertProjectSchema } from '@/db/schema/projects'
 import { createTranslator, type Locale } from '@/i18n'
 import { cn } from '@/lib/utils'
+
+/**
+ * Extended project type for the form that includes quadrantLabels.
+ */
+type ProjectFormValues = NewProject & {
+  quadrantLabels?: QuadrantLabels
+}
 
 /**
  * Props.
@@ -123,7 +215,7 @@ import { cn } from '@/lib/utils'
 const props = withDefaults(
   defineProps<{
     mode: 'create' | 'edit'
-    initialValues?: Partial<NewProject>
+    initialValues?: Partial<ProjectFormValues>
     locale: Locale
   }>(),
   { mode: 'create' },
@@ -133,8 +225,8 @@ const props = withDefaults(
  * Emits.
  */
 const emit = defineEmits<{
-  create: [project: NewProject]
-  update: [project: NewProject]
+  create: [project: ProjectFormValues]
+  update: [project: ProjectFormValues]
 }>()
 
 const t = computed(() => createTranslator(props.locale))
@@ -162,12 +254,37 @@ const dueDateValue = computed({
   set: (val) => val,
 })
 
+/// Collapsible state for quadrant labels section
+const labelsOpen = ref(false)
+
 /// Handle form submission
 const onSubmit = form.handleSubmit((values) => {
+  // Clean up quadrantLabels - remove empty strings
+  const quadrantLabels = values.quadrantLabels as QuadrantLabels | undefined
+  let cleanedLabels: QuadrantLabels | undefined
+
+  if (quadrantLabels) {
+    cleanedLabels = {}
+    for (const [key, value] of Object.entries(quadrantLabels)) {
+      if (value?.trim()) {
+        cleanedLabels[key as keyof QuadrantLabels] = value.trim()
+      }
+    }
+    // If all labels are empty, don't include the object
+    if (Object.keys(cleanedLabels).length === 0) {
+      cleanedLabels = undefined
+    }
+  }
+
+  const payload = {
+    ...values,
+    quadrantLabels: cleanedLabels,
+  } as ProjectFormValues
+
   if (props.mode === 'edit') {
-    emit('update', values)
+    emit('update', payload)
   } else {
-    emit('create', values)
+    emit('create', payload)
   }
 })
 </script>

@@ -43,6 +43,7 @@ export interface Translations {
     createNewProjectDesc: string
     editProject: string
     editProjectDesc: string
+    editTitle: string
     deleteProject: string
     deleteProjectConfirm: (title: string) => string
     deleting: string
@@ -58,6 +59,8 @@ export interface Translations {
     dueDatePlaceholder: string
     saveChanges: string
     createProject: string
+    quadrantLabels: string
+    quadrantLabelsDescription: string
   }
   tasks: {
     addTask: string
@@ -68,6 +71,7 @@ export interface Translations {
     importantNotUrgent: string
     urgentNotImportant: string
     notImportantNotUrgent: string
+    editLabel: string
   }
   settings: {
     title: string
@@ -133,6 +137,7 @@ export const en: Translations = {
     editProject: 'Edit Project',
     editProjectDesc:
       'Edit the project details. Update the form below to save changes.',
+    editTitle: 'Double-click to edit title',
     deleteProject: 'Delete Project',
     deleteProjectConfirm: (title: string) =>
       `Are you sure you want to delete "${title}"? This action cannot be undone and will remove all associated tasks.`,
@@ -149,6 +154,9 @@ export const en: Translations = {
     dueDatePlaceholder: 'Pick a due date',
     saveChanges: 'Save Changes',
     createProject: 'Create Project',
+    quadrantLabels: 'Quadrant Labels',
+    quadrantLabelsDescription:
+      'Customize the names of your Eisenhower Matrix quadrants',
   },
   tasks: {
     addTask: 'Add task...',
@@ -159,6 +167,7 @@ export const en: Translations = {
     importantNotUrgent: 'Important, but not Urgent',
     urgentNotImportant: 'Urgent, but not Important',
     notImportantNotUrgent: 'Not Important, not Urgent',
+    editLabel: 'Double-click to edit label',
   },
   settings: {
     title: 'Settings',
