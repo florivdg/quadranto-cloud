@@ -25,5 +25,7 @@ declare namespace App {
       username?: string | null
       displayUsername?: string | null
     } | null
+    locale: 'en' | 'de'
+    localeIsStored: boolean
   }
 }

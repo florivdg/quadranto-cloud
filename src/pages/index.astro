@@ -1,12 +1,16 @@
 ---
 import App from '@/layouts/App.astro'
 import Main from '@/layouts/Main.astro'
+import { createTranslator } from '@/i18n'
+
+const { locale } = Astro.locals
+const t = createTranslator(locale)
 ---
 
-<App title="Dashboard">
-  <Main heading="Dashboard">
+<App title={t.common.dashboard}>
+  <Main heading={t.common.dashboard}>
     <p class="text-muted-foreground text-xl">
-      There is no dashboard yet... ;-)
+      {t.dashboard.noDashboardYet}
     </p>
   </Main>
 </App>

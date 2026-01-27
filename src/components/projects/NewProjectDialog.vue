@@ -1,21 +1,31 @@
 <template>
   <Dialog>
     <DialogTrigger as-child>
-      <Button :variant="variant" class="my-1.5">Create Project...</Button>
+      <Button :variant="variant" class="my-1.5">{{
+        t.projects.createProject
+      }}</Button>
     </DialogTrigger>
     <DialogContent class="sm:max-w-[575px]">
       <DialogHeader>
-        <DialogTitle class="mb-4">Create a New Project</DialogTitle>
+        <DialogTitle class="mb-4">{{
+          t.projects.createNewProject
+        }}</DialogTitle>
         <DialogDescription class="sr-only">
-          Create a new project. Fill in the form below to get started.
+          {{ t.projects.createNewProjectDesc }}
         </DialogDescription>
       </DialogHeader>
-      <ProjectForm @create="handleCreateProject" mode="create" />
+      <ProjectForm
+        :locale="locale"
+        @create="handleCreateProject"
+        mode="create"
+      />
     </DialogContent>
   </Dialog>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { addProject } from '@/api/project'
 import ProjectForm from '@/components/projects/ProjectForm.vue'
 import { Button } from '@/components/ui/button'
@@ -29,13 +39,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import type { NewProject } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     variant?: ButtonVariants['variant']
+    locale: Locale
   }>(),
   { variant: 'outline' },
 )
+
+const t = computed(() => createTranslator(props.locale))
 
 async function handleCreateProject(payload: NewProject) {
   const [project, error] = await addProject(payload)

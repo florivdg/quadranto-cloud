@@ -22,7 +22,7 @@
       </p>
     </div>
     <div>
-      <ProjectHeaderActions :project="project" />
+      <ProjectHeaderActions :project="project" :locale="locale" />
     </div>
   </div>
 </template>
@@ -32,10 +32,11 @@ import { CalendarIcon } from 'lucide-vue-next'
 
 import ProjectHeaderActions from '@/components/projects/ProjectHeaderActions.vue'
 import { type Project } from '@/db/schema/projects'
+import type { Locale } from '@/i18n'
 import { formatDate } from '@/lib/formatters'
 
 defineProps<{
   project: Project
-  locale?: string
+  locale: Locale
 }>()
 </script>

@@ -10,6 +10,7 @@
         <Quadrant
           :priority="prio"
           :tasks="tasksForPriority(prio)"
+          :locale="locale"
           v-for="prio in prios"
           :key="`task-card-${prio}`"
           @add="handleAddTask($event, prio)"
@@ -27,6 +28,7 @@ import { addTask, updateTask } from '@/api'
 import ProjectHeader from '@/components/projects/ProjectHeader.vue'
 import Quadrant from '@/components/tasks/Quadrant.vue'
 import type { NewTask, Priority, Project, Task } from '@/db/schema/projects'
+import type { Locale } from '@/i18n'
 
 /**
  * Available priorities.
@@ -39,7 +41,7 @@ const prios: Priority[] = ['urgent', 'high', 'medium', 'low']
 const props = defineProps<{
   initialTasks: Task[]
   project: Project
-  locale?: string
+  locale: Locale
 }>()
 
 /**

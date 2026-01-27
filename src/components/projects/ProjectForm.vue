@@ -2,11 +2,13 @@
   <form class="w-full space-y-4" @submit="onSubmit">
     <FormField v-slot="{ componentField }" name="title">
       <FormItem>
-        <FormLabel class="flex items-center"> Title </FormLabel>
+        <FormLabel class="flex items-center">
+          {{ t.projectForm.title }}
+        </FormLabel>
         <FormControl>
           <Input
             type="text"
-            placeholder="Set the project title"
+            :placeholder="t.projectForm.titlePlaceholder"
             v-bind="componentField"
           />
         </FormControl>
@@ -16,10 +18,10 @@
 
     <FormField v-slot="{ componentField }" name="description">
       <FormItem>
-        <FormLabel>Description</FormLabel>
+        <FormLabel>{{ t.projectForm.description }}</FormLabel>
         <FormControl>
           <Textarea
-            placeholder="Add some more infos about the project"
+            :placeholder="t.projectForm.descriptionPlaceholder"
             class="resize-none"
             v-bind="componentField"
           />
@@ -30,7 +32,7 @@
 
     <FormField name="dueDate">
       <FormItem class="flex flex-col">
-        <FormLabel>Due Date</FormLabel>
+        <FormLabel>{{ t.projectForm.dueDate }}</FormLabel>
         <Popover>
           <PopoverTrigger as-child>
             <FormControl>
@@ -46,7 +48,7 @@
                 <span>{{
                   dueDateValue
                     ? df.format(toDate(dueDateValue))
-                    : 'Pick a due date'
+                    : t.projectForm.dueDatePlaceholder
                 }}</span>
                 <CalendarIcon class="ms-auto size-4 opacity-50" />
               </Button>
@@ -57,7 +59,7 @@
             <Calendar
               v-model:placeholder="dueDatePlaceholder"
               v-model="dueDateValue"
-              calendar-label="Project Due Date"
+              :calendar-label="t.projectForm.dueDate"
               initial-focus
               :min-value="today(getLocalTimeZone())"
               @update:model-value="
@@ -77,7 +79,7 @@
     </FormField>
 
     <Button type="submit">{{
-      mode === 'edit' ? 'Save Changes' : 'Create Project'
+      mode === 'edit' ? t.projectForm.saveChanges : t.projectForm.createProject
     }}</Button>
   </form>
 </template>
@@ -112,6 +114,7 @@ import {
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { insertProjectSchema, type NewProject } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 import { cn } from '@/lib/utils'
 
 /**
@@ -121,6 +124,7 @@ const props = withDefaults(
   defineProps<{
     mode: 'create' | 'edit'
     initialValues?: Partial<NewProject>
+    locale: Locale
   }>(),
   { mode: 'create' },
 )
@@ -133,6 +137,8 @@ const emit = defineEmits<{
   update: [project: NewProject]
 }>()
 
+const t = computed(() => createTranslator(props.locale))
+
 /// Convert from drizzle-zod schema to vee-validate schema
 const formSchema = toTypedSchema(insertProjectSchema)
 
@@ -143,7 +149,7 @@ const form = useForm({
 })
 
 /// Date formatter for the due date field
-const df = new DateFormatter(navigator.language, {
+const df = new DateFormatter(props.locale, {
   dateStyle: 'long',
 })
 

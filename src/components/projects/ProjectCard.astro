@@ -11,15 +11,15 @@ import type { Project } from '@/db/schema/projects'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { CalendarIcon } from 'lucide-vue-next'
 import { formatDate } from '@/lib/formatters'
-import { acceptLanguage } from '@/lib/utils'
+import { createTranslator } from '@/i18n'
 
 interface Props {
   project: Project
 }
 
 const { project } = Astro.props
-const headers = Astro.request.headers
-const locale = acceptLanguage(headers)
+const { locale } = Astro.locals
+const t = createTranslator(locale)
 ---
 
 <Card>
@@ -38,7 +38,7 @@ const locale = acceptLanguage(headers)
               {formatDate(project.dueDate, locale)}
             </time>
           ) : (
-            <span class="italic">No due date</span>
+            <span class="italic">{t.common.noDueDate}</span>
           )
         }
       </div>
@@ -50,7 +50,7 @@ const locale = acceptLanguage(headers)
       <a
         href={`/projects/${project.id}`}
         class:list={[buttonVariants({ variant: 'outline' }), 'w-full']}
-        >Show all tasks</a
+        >{t.common.showAllTasks}</a
       >
     </Button>
   </CardFooter>

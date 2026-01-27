@@ -6,11 +6,12 @@
       }}</CardTitle>
     </CardHeader>
     <CardContent class="flex flex-1 flex-col overflow-hidden p-0">
-      <TaskInput @add="handleAddTask" />
+      <TaskInput :locale="locale" @add="handleAddTask" />
       <ul class="overflow-y-auto">
         <TaskCell
           v-for="task in tasks"
           :task="task"
+          :locale="locale"
           :key="task.id"
           @toggle-done="$emit('toggleDone', $event)"
         />
@@ -26,6 +27,7 @@ import TaskCell from '@/components/tasks/TaskCell.vue'
 import TaskInput from '@/components/tasks/TaskInput.vue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { Priority, Task } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 
 /**
  * Props.
@@ -33,6 +35,7 @@ import type { Priority, Task } from '@/db/schema/projects'
 const props = defineProps<{
   priority: Priority
   tasks: Task[]
+  locale: Locale
 }>()
 
 /**
@@ -43,19 +46,21 @@ const emit = defineEmits<{
   toggleDone: [task: Task]
 }>()
 
+const t = computed(() => createTranslator(props.locale))
+
 /**
  * Compute quadrant title based on priority.
  */
 const title = computed(() => {
   switch (props.priority) {
     case 'urgent':
-      return 'Urgent and Important 🔥'
+      return `${t.value.quadrants.urgentImportant} 🔥`
     case 'high':
-      return 'Important, but not Urgent ⏰'
+      return `${t.value.quadrants.importantNotUrgent} ⏰`
     case 'medium':
-      return 'Urgent, but not Important ⚡'
+      return `${t.value.quadrants.urgentNotImportant} ⚡`
     case 'low':
-      return 'Not Important, not Urgent 💤'
+      return `${t.value.quadrants.notImportantNotUrgent} 💤`
   }
 })
 

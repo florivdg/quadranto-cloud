@@ -2,22 +2,22 @@
   <Card class="mx-auto max-w-sm min-w-96">
     <form @submit.prevent="handleSignup">
       <CardHeader>
-        <CardTitle class="text-2xl">Sign Up</CardTitle>
+        <CardTitle class="text-2xl">{{ t.auth.signUp }}</CardTitle>
         <CardDescription>
-          Enter your information to create an account
+          {{ t.auth.enterInfoToCreate }}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Alert v-if="errorMessage" variant="destructive" class="-mt-2 mb-4">
           <AlertCircle class="size-4" />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>{{ t.common.error }}</AlertTitle>
           <AlertDescription>
             {{ errorMessage }}
           </AlertDescription>
         </Alert>
         <div class="grid gap-4">
           <div class="grid gap-2">
-            <Label for="username">Username</Label>
+            <Label for="username">{{ t.auth.username }}</Label>
             <Input
               v-model="username"
               id="username"
@@ -31,7 +31,7 @@
             </p>
           </div>
           <div class="grid gap-2">
-            <Label for="password">Password</Label>
+            <Label for="password">{{ t.auth.password }}</Label>
             <Input
               v-model="password"
               id="password"
@@ -44,12 +44,12 @@
             class="w-full"
             :disabled="isLoading || !!usernameError"
           >
-            {{ isLoading ? 'Creating account...' : 'Create an account' }}
+            {{ isLoading ? t.auth.creatingAccount : t.auth.createAccount }}
           </Button>
         </div>
         <div class="mt-4 text-center text-sm">
-          Already have an account?
-          <a href="/login" class="underline">Sign in</a>
+          {{ t.auth.haveAccount }}
+          <a href="/login" class="underline">{{ t.auth.signIn }}</a>
         </div>
       </CardContent>
     </form>
@@ -71,8 +71,15 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { createTranslator, type Locale } from '@/i18n'
 import { authClient } from '@/lib/auth-client'
 import { validateUsername } from '@/lib/validators'
+
+const props = defineProps<{
+  locale: Locale
+}>()
+
+const t = computed(() => createTranslator(props.locale))
 
 const username = ref('')
 const password = ref('')
@@ -110,7 +117,7 @@ async function handleSignup() {
       window.location.href = '/'
     }
   } catch {
-    errorMessage.value = 'An unexpected error occurred'
+    errorMessage.value = t.value.auth.unexpectedError
   } finally {
     isLoading.value = false
   }

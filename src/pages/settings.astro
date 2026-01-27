@@ -1,12 +1,21 @@
 ---
 import App from '@/layouts/App.astro'
 import Main from '@/layouts/Main.astro'
+import LanguageSelector from '@/components/settings/LanguageSelector.vue'
+import { createTranslator } from '@/i18n'
+
+const { locale, localeIsStored } = Astro.locals
+const t = createTranslator(locale)
 ---
 
-<App title="Settings">
-  <Main heading="Settings" scrollable={true}>
-    <p class="text-muted-foreground text-xl">
-      There are no settings yet... ;-)
-    </p>
+<App title={t.settings.title}>
+  <Main heading={t.settings.title} scrollable={true}>
+    <div class="space-y-6">
+      <LanguageSelector
+        locale={locale}
+        localeIsStored={localeIsStored}
+        client:load
+      />
+    </div>
   </Main>
 </App>

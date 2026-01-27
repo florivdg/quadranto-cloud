@@ -1,17 +1,23 @@
 ---
 import NewProjectDialog from '@/components/projects/NewProjectDialog.vue'
+import { createTranslator } from '@/i18n'
+
+const { locale } = Astro.locals
+const t = createTranslator(locale)
 ---
 
 <div
   class="flex flex-1 items-center justify-center rounded-lg border border-dashed p-6 shadow-xs lg:p-6"
 >
   <div class="flex flex-col items-center gap-1 text-center">
-    <h3 class="text-2xl font-bold tracking-tight">You have no projects yet.</h3>
+    <h3 class="text-2xl font-bold tracking-tight">
+      {t.projects.noProjectsYet}
+    </h3>
     <p class="text-muted-foreground text-sm">
-      You can start planning as soon as you add a project.
+      {t.projects.startPlanning}
     </p>
     <div class="mt-4">
-      <NewProjectDialog variant="default" client:load />
+      <NewProjectDialog variant="default" locale={locale} client:load />
     </div>
   </div>
 </div>

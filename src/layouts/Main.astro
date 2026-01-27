@@ -7,6 +7,7 @@ import SidebarMenu from '@/components/sidebar/Menu.vue'
 import SidebarMenuMobile from '@/components/sidebar/MobileMenu.vue'
 import NewProjectDialog from '@/components/projects/NewProjectDialog.vue'
 import type { Project } from '@/db/schema/projects'
+import { createTranslator } from '@/i18n'
 
 interface Props {
   heading?: string
@@ -21,6 +22,9 @@ if (typeof addPadding === 'undefined') addPadding = true
 
 const { url } = Astro.request
 const currentPath = new URL(url).pathname
+
+const { locale } = Astro.locals
+const t = createTranslator(locale)
 ---
 
 <div
@@ -31,14 +35,18 @@ const currentPath = new URL(url).pathname
       <div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
         <a href="/" class="flex items-center gap-2 font-semibold">
           <Package2 class="h-6 w-6" />
-          <span class="sr-only">Go to Dashboard</span>
+          <span class="sr-only">{t.sidebar.goToDashboard}</span>
           <span aria-hidden="true">quadranto.cloud</span>
         </a>
         <Notifications />
       </div>
       <div class="flex-1">
-        <SidebarMenu activePath={currentPath} initialProjects={initialProjects}>
-          <NewProjectDialog slot="new-project" client:load />
+        <SidebarMenu
+          activePath={currentPath}
+          initialProjects={initialProjects}
+          locale={locale}
+        >
+          <NewProjectDialog slot="new-project" locale={locale} client:load />
         </SidebarMenu>
       </div>
     </div>
@@ -52,13 +60,14 @@ const currentPath = new URL(url).pathname
           client:idle
           activePath={currentPath}
           initialProjects={initialProjects}
+          locale={locale}
         >
-          <NewProjectDialog slot="new-project" client:load />
+          <NewProjectDialog slot="new-project" locale={locale} client:load />
         </SidebarMenuMobile>
         <div class="w-full flex-1">
           <Search />
         </div>
-        <UserMenu client:load />
+        <UserMenu locale={locale} client:load />
       </header>
       <main
         class:list={[

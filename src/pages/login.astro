@@ -2,7 +2,7 @@
 import App from '@/layouts/App.astro'
 import LoginView from '@/components/views/Login.vue'
 
-const { user } = Astro.locals
+const { user, locale } = Astro.locals
 if (user) {
   return Astro.redirect('/')
 }
@@ -10,6 +10,6 @@ if (user) {
 
 <App>
   <main class="container flex min-h-dvh items-center justify-center">
-    <LoginView client:load />
+    <LoginView locale={locale} client:load />
   </main>
 </App>

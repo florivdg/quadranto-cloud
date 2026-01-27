@@ -1,5 +1,6 @@
 import { sequence, defineMiddleware } from 'astro:middleware'
 
+import { DEFAULT_LOCALE, detectLocaleFromHeader, isValidLocale } from '@/i18n'
 import { auth } from '@/lib/auth'
 
 /**
@@ -12,6 +13,28 @@ const session = defineMiddleware(async (context, next) => {
 
   context.locals.session = session?.session ?? null
   context.locals.user = session?.user ?? null
+
+  return next()
+})
+
+/**
+ * Middleware for setting the locale based on cookie or Accept-Language header.
+ * Cookie takes precedence over Accept-Language to allow user preference override.
+ */
+const localeMiddleware = defineMiddleware(async (context, next) => {
+  // Check for locale cookie first (user preference)
+  const localeCookie = context.cookies.get('locale')?.value
+  if (localeCookie && isValidLocale(localeCookie)) {
+    context.locals.locale = localeCookie
+    context.locals.localeIsStored = true
+    return next()
+  }
+
+  // Fall back to Accept-Language header
+  const acceptLanguage = context.request.headers.get('accept-language')
+  context.locals.locale =
+    detectLocaleFromHeader(acceptLanguage) ?? DEFAULT_LOCALE
+  context.locals.localeIsStored = false
 
   return next()
 })
@@ -46,6 +69,6 @@ const authMiddleware = defineMiddleware(async (context, next) => {
 })
 
 /**
- * Middleware to run the session and auth middleware in sequence.
+ * Middleware to run the session, auth, and locale middleware in sequence.
  */
-export const onRequest = sequence(session, authMiddleware)
+export const onRequest = sequence(session, localeMiddleware, authMiddleware)

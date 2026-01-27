@@ -4,12 +4,11 @@ import Main from '@/layouts/Main.astro'
 import { listProjects, getProject } from '@/db/client/projects'
 import { listTasksForProject } from '@/db/client/tasks'
 import Quadrants from '@/components/tasks/Quadrants.vue'
-import { acceptLanguage } from '@/lib/utils'
 
 const { id } = Astro.params
 if (!id) return Astro.redirect('/projects')
 
-const { user } = Astro.locals
+const { user, locale } = Astro.locals
 const project = await getProject(id, user!.id)
 
 if (!project) return Astro.redirect('/404')
@@ -17,8 +16,6 @@ if (!project) return Astro.redirect('/404')
 const allTasks = await listTasksForProject(project.id, user!.id)
 
 const projects = await listProjects(user!.id)
-
-const locale = acceptLanguage(Astro.request.headers)
 ---
 
 <App title={project.title}>

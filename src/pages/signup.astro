@@ -2,12 +2,12 @@
 import App from '@/layouts/App.astro'
 import SignupView from '@/components/views/Signup.vue'
 
-const { user } = Astro.locals
+const { user, locale } = Astro.locals
 if (user) return Astro.redirect('/')
 ---
 
 <App>
   <main class="container flex min-h-dvh items-center justify-center">
-    <SignupView client:load />
+    <SignupView locale={locale} client:load />
   </main>
 </App>

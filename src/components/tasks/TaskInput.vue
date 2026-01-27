@@ -2,7 +2,7 @@
   <div class="relative w-full items-center shadow-xs">
     <Input
       type="text"
-      placeholder="Add task..."
+      :placeholder="t.tasks.addTask"
       class="h-12 rounded-none border-none py-0 pl-8"
       @keyup.enter="handleInput"
     />
@@ -17,8 +17,16 @@
 
 <script setup lang="ts">
 import { Plus } from 'lucide-vue-next'
+import { computed } from 'vue'
 
 import { Input } from '@/components/ui/input'
+import { createTranslator, type Locale } from '@/i18n'
+
+const props = defineProps<{
+  locale: Locale
+}>()
+
+const t = computed(() => createTranslator(props.locale))
 
 /**
  * Emits.

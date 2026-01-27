@@ -4,13 +4,15 @@ import { listProjects } from '@/db/client/projects'
 import ProjectCard from '@/components/projects/ProjectCard.astro'
 import App from '@/layouts/App.astro'
 import Main from '@/layouts/Main.astro'
+import { createTranslator } from '@/i18n'
 
-const { user } = Astro.locals
+const { user, locale } = Astro.locals
 const projects = await listProjects(user!.id)
+const t = createTranslator(locale)
 ---
 
-<App title="Projects">
-  <Main heading="Projects" initialProjects={projects}>
+<App title={t.common.projects}>
+  <Main heading={t.common.projects} initialProjects={projects}>
     {
       projects.length ? (
         <div class="@container/project mt-4">

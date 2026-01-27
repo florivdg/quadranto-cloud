@@ -15,7 +15,7 @@
           <template #icon="{ iconClass }">
             <Home :class="iconClass" aria-hidden="true" />
           </template>
-          Dashboard
+          {{ t.common.dashboard }}
         </SidebarMenuMobileItem>
 
         <SidebarMenuMobileItem
@@ -29,7 +29,7 @@
               aria-hidden="true"
             />
           </template>
-          Projects
+          {{ t.common.projects }}
         </SidebarMenuMobileItem>
 
         <slot name="new-project" v-if="initialProjects?.length" />
@@ -49,7 +49,7 @@
           <template #icon="{ iconClass }">
             <Settings :class="iconClass" aria-hidden="true" />
           </template>
-          Settings
+          {{ t.common.settings }}
         </SidebarMenuMobileItem>
       </nav>
     </SheetContent>
@@ -65,15 +65,20 @@ import {
   FolderClosed,
   Settings,
 } from 'lucide-vue-next'
+import { computed } from 'vue'
 
 import SidebarMenuMobileItem from '@/components/sidebar/MobileMenuItem.vue'
 import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import type { Project } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 
-defineProps<{
+const props = defineProps<{
   activePath: string
   initialProjects?: Project[]
+  locale: Locale
 }>()
+
+const t = computed(() => createTranslator(props.locale))
 </script>

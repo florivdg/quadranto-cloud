@@ -3,21 +3,26 @@
     <DropdownMenuTrigger as-child>
       <Button variant="secondary" size="icon" class="rounded-full">
         <CircleUser class="h-5 w-5" />
-        <span class="sr-only">Toggle user menu</span>
+        <span class="sr-only">{{ t.userMenu.toggleMenu }}</span>
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuLabel>{{ t.userMenu.myAccount }}</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem as="a" href="/settings">Settings</DropdownMenuItem>
+      <DropdownMenuItem as="a" href="/settings">{{
+        t.common.settings
+      }}</DropdownMenuItem>
       <DropdownMenuSeparator />
-      <DropdownMenuItem @click="handleLogout">Logout</DropdownMenuItem>
+      <DropdownMenuItem @click="handleLogout">{{
+        t.auth.logout
+      }}</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>
 
 <script setup lang="ts">
 import { CircleUser } from 'lucide-vue-next'
+import { computed } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -28,7 +33,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { createTranslator, type Locale } from '@/i18n'
 import { authClient } from '@/lib/auth-client'
+
+const props = defineProps<{
+  locale: Locale
+}>()
+
+const t = computed(() => createTranslator(props.locale))
 
 /**
  * Handles the logout functionality.

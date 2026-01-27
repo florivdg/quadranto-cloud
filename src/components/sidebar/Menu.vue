@@ -4,7 +4,7 @@
       <template #icon="{ iconClass }">
         <Home :class="iconClass" aria-hidden="true" />
       </template>
-      Dashboard
+      {{ t.common.dashboard }}
     </SidebarMenuItem>
 
     <SidebarMenuItem href="/projects" :is-active="activePath === '/projects'">
@@ -15,7 +15,7 @@
           aria-hidden="true"
         />
       </template>
-      Projects
+      {{ t.common.projects }}
     </SidebarMenuItem>
 
     <slot name="new-project" v-if="initialProjects?.length" />
@@ -32,20 +32,25 @@
       <template #icon="{ iconClass }">
         <Settings :class="iconClass" aria-hidden="true" />
       </template>
-      Settings
+      {{ t.common.settings }}
     </SidebarMenuItem>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { Home, FolderOpen, FolderClosed, Settings } from 'lucide-vue-next'
+import { computed } from 'vue'
 
 import SidebarMenuItem from '@/components/sidebar/MenuItem.vue'
 import SidebarProjectItem from '@/components/sidebar/ProjectItem.vue'
 import type { Project } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 
-defineProps<{
+const props = defineProps<{
   activePath: string
   initialProjects?: Project[]
+  locale: Locale
 }>()
+
+const t = computed(() => createTranslator(props.locale))
 </script>

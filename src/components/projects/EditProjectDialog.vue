@@ -2,13 +2,14 @@
   <Dialog v-model:open="open">
     <DialogContent class="sm:max-w-[575px]">
       <DialogHeader>
-        <DialogTitle class="mb-4">Edit Project</DialogTitle>
+        <DialogTitle class="mb-4">{{ t.projects.editProject }}</DialogTitle>
         <DialogDescription class="sr-only">
-          Edit the project details. Update the form below to save changes.
+          {{ t.projects.editProjectDesc }}
         </DialogDescription>
       </DialogHeader>
       <ProjectForm
         mode="edit"
+        :locale="locale"
         :initial-values="initialValues"
         @update="handleUpdateProject"
       />
@@ -29,10 +30,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import type { NewProject, Project } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 
 const props = defineProps<{
   project: Project
+  locale: Locale
 }>()
+
+const t = computed(() => createTranslator(props.locale))
 
 const open = defineModel<boolean>('open', { default: false })
 

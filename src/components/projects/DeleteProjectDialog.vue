@@ -2,21 +2,22 @@
   <Dialog v-model:open="open">
     <DialogContent class="sm:max-w-[425px]">
       <DialogHeader>
-        <DialogTitle>Delete Project</DialogTitle>
+        <DialogTitle>{{ t.projects.deleteProject }}</DialogTitle>
         <DialogDescription>
-          Are you sure you want to delete "{{ project.title }}"? This action
-          cannot be undone and will remove all associated tasks.
+          {{ t.projects.deleteProjectConfirm(project.title) }}
         </DialogDescription>
       </DialogHeader>
       <DialogFooter class="gap-2">
-        <Button variant="outline" @click="open = false">Cancel</Button>
+        <Button variant="outline" @click="open = false">{{
+          t.common.cancel
+        }}</Button>
         <Button
           variant="destructive"
           :disabled="isDeleting"
           @click="handleDelete"
         >
-          <template v-if="isDeleting">Deleting...</template>
-          <template v-else>Delete</template>
+          <template v-if="isDeleting">{{ t.projects.deleting }}</template>
+          <template v-else>{{ t.common.delete }}</template>
         </Button>
       </DialogFooter>
     </DialogContent>
@@ -24,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { deleteProject } from '@/api/project'
 import { Button } from '@/components/ui/button'
@@ -37,10 +38,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import type { Project } from '@/db/schema/projects'
+import { createTranslator, type Locale } from '@/i18n'
 
 const props = defineProps<{
   project: Project
+  locale: Locale
 }>()
+
+const t = computed(() => createTranslator(props.locale))
 
 const open = defineModel<boolean>('open', { default: false })
 const isDeleting = ref(false)
