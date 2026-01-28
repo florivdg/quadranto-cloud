@@ -88,6 +88,12 @@ export interface Translations {
   dashboard: {
     noDashboardYet: string
   }
+  toasts: {
+    titleUpdated: string
+    titleUpdateFailed: string
+    labelUpdated: string
+    labelUpdateFailed: string
+  }
 }
 
 export const en: Translations = {
@@ -183,5 +189,11 @@ export const en: Translations = {
   },
   dashboard: {
     noDashboardYet: 'There is no dashboard yet... ;-)',
+  },
+  toasts: {
+    titleUpdated: 'Project title updated',
+    titleUpdateFailed: 'Failed to update project title',
+    labelUpdated: 'Quadrant label updated',
+    labelUpdateFailed: 'Failed to update quadrant label',
   },
 }

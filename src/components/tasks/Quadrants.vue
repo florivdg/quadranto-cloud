@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { toast } from 'vue-sonner'
 
 import { addTask, updateTask } from '@/api'
 import { updateProject } from '@/api/project'
@@ -42,7 +43,7 @@ import type {
   QuadrantLabels,
   Task,
 } from '@/db/schema/projects'
-import type { Locale } from '@/i18n'
+import { createTranslator, type Locale } from '@/i18n'
 
 /**
  * Available priorities.
@@ -57,6 +58,11 @@ const props = defineProps<{
   project: Project
   locale: Locale
 }>()
+
+/**
+ * Translations.
+ */
+const t = createTranslator(props.locale)
 
 /**
  * Tasks ref.
@@ -163,7 +169,10 @@ async function handleUpdateTitle(title: string) {
       ...currentProject.value,
       title: previousTitle,
     }
+    toast.error(t.toasts.titleUpdateFailed)
     console.error(error)
+  } else {
+    toast.success(t.toasts.titleUpdated)
   }
 }
 
@@ -208,7 +217,10 @@ async function handleUpdateLabel(priority: Priority, label: string) {
       ...currentProject.value,
       quadrantLabels: previousLabels,
     }
+    toast.error(t.toasts.labelUpdateFailed)
     console.error(error)
+  } else {
+    toast.success(t.toasts.labelUpdated)
   }
 }
 </script>

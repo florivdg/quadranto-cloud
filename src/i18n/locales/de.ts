@@ -96,4 +96,11 @@ export const de: Translations = {
   dashboard: {
     noDashboardYet: 'Es gibt noch kein Dashboard... ;-)',
   },
+  toasts: {
+    titleUpdated: 'Projekttitel aktualisiert',
+    titleUpdateFailed: 'Projekttitel konnte nicht aktualisiert werden',
+    labelUpdated: 'Quadranten-Bezeichnung aktualisiert',
+    labelUpdateFailed:
+      'Quadranten-Bezeichnung konnte nicht aktualisiert werden',
+  },
 }
